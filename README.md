@@ -3,7 +3,7 @@
 
 ## 📝 Description
 
-This is a randomized turn-based roguelike developed in Python using Pygame, created by **Jack Tsui**, **Daniel Prince**, **Zachary Barrentine**, and. The game is for the 16th Alakajam Game Jam starting at May 1st to May 31st in 20205. 
+This is a randomized turn-based roguelike developed in Python using Pygame, created by **Jack Tsui**, **Daniel Prince**, **Zachary Barrentine**, and **Jordan Wilcox**. The game is for the 16th Alakajam Game Jam spanning from May 1st to May 31st in 2025. 
 
 ## 🚀 Features
 
@@ -12,7 +12,6 @@ This is a randomized turn-based roguelike developed in Python using Pygame, crea
 
 ### 🔜 Work In Progress
 - Turn-based combat with enemy encounters
-- 
 - Skill system and cooldown management
 - Upgrade shop with coin-based economy
 - Interactive dialogue system
@@ -43,7 +42,6 @@ This is a randomized turn-based roguelike developed in Python using Pygame, crea
 - Turn-based battle mechanics and logic flow
 - Planning and iterating on game systems
 - Use of complex algorithms
-- 
 
 ---
 
