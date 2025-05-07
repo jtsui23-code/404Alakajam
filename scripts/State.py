@@ -1,10 +1,11 @@
 import pygame
 import sys
 import UIButton as Button
+import Sound as Sound
 
 class State:
-    def __init__(self, stateName=''):
-        self.currentState = stateName
+    def __init__(self):
+        self.isCurrentState = False
         self.uiElements = {}
 
     # Assumes that the render method in the UI class will require a 
@@ -15,6 +16,12 @@ class State:
 
     def update(self, screen):
         self.render(screen)
+    
+    def checkCurrentState(self):
+        return self.isCurrentState
+    
+    def changeCurrentState(self, input=False):
+        self.isCurrentState = input
     
     def handleEvent(self, event):
         if event.type == pygame.QUIT:
@@ -35,18 +42,95 @@ class State:
             if isinstance(element, Button) and element.rect.collidepoint(mosPos):
                 self.buttonClicked(key)
 
-
-
-    def enterState(self):
-        pass
-    
     # Performs the particular action that the specific button will do once 
     # clicked upon by the mouse left click.
     def buttonClicked(self, buttonKey):
         pass
 
-    def exitState(self):
-        pass
 
-    def switchState(self):
+
+    def startMusic(self):
         pass
+    
+   
+
+class MainMenuState(State):
+
+    def __init__(self):
+        super().__init__()
+
+    def startMusic(self):
+        Sound.playTheme(songName='TitleTheme', loop=True)
+
+    
+    
+
+class ShopState(State):
+    
+    def __init__(self):
+        super().__init__()
+
+    def startMusic(self):
+        Sound.playTheme(songName='ShopTheme', loop=True)
+
+class CharacterSelectState(State):
+    
+    def __init__(self):
+        super().__init__()
+    
+    def startMusic(self):
+        Sound.playTheme(songName='TitleTheme', loop=True)
+
+class LevelSelectState(State):
+    
+    def __init__(self):
+        super().__init__()
+
+    def startMusic(self):
+        Sound.playTheme(songName='TitleTheme', loop=True)
+
+
+class RoomSelectState(State):
+    
+    def __init__(self):
+        super().__init__()
+
+    def startMusic(self):
+        Sound.playTheme(songName='RoomSelectTheme', loop=True)
+
+class RoomRollingState(State):
+    
+    def __init__(self):
+        super().__init__()
+    
+    def startMusic(self):
+        Sound.playTheme(songName='RoomSelectTheme', loop=True)
+
+class BattleState(State):
+    
+    def __init__(self):
+        super().__init__()
+    
+    def startMusic(self):
+        Sound.playTheme(songName='BattleTheme1', loop=True)
+        # Sound.playTheme(songName='BattleTheme2', loop=True)
+        # Sound.playTheme(songName='VictoryTheme', loop=True)
+
+
+
+class LoadState(State):
+    
+    def __init__(self):
+        super().__init__()
+
+    def startMusic(self):
+        Sound.playTheme(songName='TitleTheme', loop=True)
+
+class GameOver(State):
+
+    def __init__(self):
+        super().__init__()
+
+    def startMusic(self):
+        Sound.playTheme(songName='GameOverTheme', loop=True)
+

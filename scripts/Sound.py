@@ -19,10 +19,10 @@ class sounds(object):
         self.songName = None
 
     def playTheme(self, songName, loop=False):
-        if self.songPlaying and self.songPlaying != songName and loop == True:
+        if self.songPlaying and self.songName != songName and loop == True:
             self.songPlaying = songName
             self.songs[songName].play(-1)
-        elif self.songPlaying and self.songPlaying != songName and loop == False:
+        elif self.songPlaying and self.songName != songName and loop == False:
             self.songPlaying = songName
             self.songs[songName].play()
         else:
