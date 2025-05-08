@@ -6,7 +6,7 @@ class Entity():
         
         self.hearts = 8
         self.playerClass = ''
-        self.speicalMoveName = ''
+        self.specialMoveName = ''
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
@@ -27,7 +27,7 @@ class Knight(Entity):
 
         self.hearts = 8
         self.playerClass = 'Knight'
-        self.speicalMoveName = 'Dulist\'s Gamebit'
+        self.specialMoveName = 'Dulist\'s Gambit'
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
@@ -40,7 +40,7 @@ class Wizard(Entity):
         self.playerClass = 'Wizard'
 
          # Deals 1 heart of dmg and applies burn 60% of the time(1 heart per turn)
-        self.speicalMoveName = 'Incinerate'
+        self.specialMoveName = 'Incinerate'
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
@@ -54,7 +54,7 @@ class Goblin(Entity):
         self.playerClass = 'Goblin'
 
          # Permanty reduces enemy dmg by 50% per hit. 
-        self.speicalMoveName = 'Rusty Shiv'
+        self.specialMoveName = 'Rusty Shiv'
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
@@ -67,7 +67,7 @@ class Rat(Entity):
         self.playerClass = 'Rat'
 
         # Life steals 1 heart
-        self.speicalMoveName = 'Vermin Fangs' 
+        self.specialMoveName = 'Vermin Fangs' 
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
@@ -81,7 +81,7 @@ class Thief(Entity):
         self.playerClass = 'Thief'
 
         # Encore (forces enmey to use the last move for 2 turns)
-        self.speicalMoveName = 'Pressure Point' 
+        self.specialMoveName = 'Pressure Point' 
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
