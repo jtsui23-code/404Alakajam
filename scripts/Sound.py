@@ -1,6 +1,6 @@
 import pygame
 
-class sounds(object):
+class MusicManager(object):
     def __init__(self):
         self.songs = {
             'TitleTheme': pygame.mixer.Sound('Media/sounds/title.wav'),
@@ -35,7 +35,7 @@ class sounds(object):
             self.songPlaying = None
             self.loop = False
         
-class SFX(object):
+class SFXManager(object):
     def __init__(self):
         self.sfx = {
             'playerHurt': pygame.mixer.Sound('Media/sounds/playerhurt.wav'),
