@@ -1,4 +1,6 @@
 import pygame
+import random
+from Item import Item
 
 class Grid:
     def __init__(self, rows: int, cols: int, width: int, height: int):

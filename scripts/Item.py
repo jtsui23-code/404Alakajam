@@ -48,11 +48,6 @@ class hpPotion:
     def __str__(self):
         return f"hpPotion(health={self.health}, hpPotionAmount={self.hpPotionAmount}, hpPotionPrice={self.hpPotionPrice})"
 
-    def heal(self, playerHealth, maxHealth):
-        if(self.hpPotionAmount > 0 and self.health < maxHealth):
-            self.health += 1
-            self.hpPotionAmount -= 1
-
     def buy(self, coins):
         if coins >= self.hpPotionPrice:
             self.hpPotionAmount += 1
@@ -60,6 +55,11 @@ class hpPotion:
         else:
             print("Not enough coins to buy hpPotion.")
         return coins
+    
+    def useHeal(self, playerHealth, maxHealth):
+        if(self.hpPotionAmount > 0 and self.health < maxHealth):
+            self.health += 1
+            self.hpPotionAmount -= 1
 
 class freezePotion:
     def __init__(self, freezePotionAmount):
@@ -77,6 +77,14 @@ class freezePotion:
             print("Not enough coins to buy freezePotion.")
         return coins
     
+    def useFreeze(self, enemy):
+        if self.freezePotionAmount > 0:
+            ## Battle script needs to have freeze
+            ## enemy.freeze()
+            self.freezePotionAmount -= 1
+        else:
+            print("No freeze potions left to use.")
+    
 class smokeBomb:
     def __init__(self, smokeBombAmount):
         self.smokeBombAmount = smokeBombAmount
@@ -92,6 +100,14 @@ class smokeBomb:
         else:
             print("Not enough coins to buy smokeBomb.")
         return coins
+    
+    def useSmoke(self, enemy):
+        if self.smokeBombAmount > 0:
+            ## Battle script needs to have flee
+            ## enemy.flee()
+            self.smokeBombAmount -= 1
+        else:
+            print("No smoke bombs left to use.")
 
 class thornWhip:
     def __init__(self, thornWhipAmount):
@@ -108,3 +124,11 @@ class thornWhip:
         else:
             print("Not enough coins to buy thornWhip.")
         return coins
+    
+    def useThorn(self, enemy):
+        if self.thornWhipAmount > 0:
+            ## Battle script needs to have thorn whip
+            ## enemy.thornWhip()
+            self.thornWhipAmount -= 1
+        else:
+            print("No thorn whips left to use.")
