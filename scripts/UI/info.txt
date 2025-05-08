@@ -1,1 +1,5 @@
 Midieval, Dungeon, Fear, Pixelated. this is the theme
+
+
+Enemies: Skeleton, Slime, Bat, Ghost, Undead
+Heroes: Knight, Wizzard, Thief, Goblin. Rat
