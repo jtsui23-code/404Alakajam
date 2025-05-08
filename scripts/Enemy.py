@@ -1,4 +1,4 @@
-from Player import Entity
+from scripts.Player import Entity
 
 class Skeleton(Entity):
 
