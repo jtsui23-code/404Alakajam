@@ -7,7 +7,7 @@ from scripts.Enemy import Skeleton
 class BattleData:
     def __init__(self):
         self.turn = [True]
-        self.you = [True, False] 
+        self.player = [True, False] 
         self.enemy = [True, False]
 
     def getAll(self):
@@ -15,42 +15,65 @@ class BattleData:
 
 
 
-class Info:
-    def Random():
-        odds = random.randint(1,5)
-        print(f"Someone chose basic attack!! Your damage is ", {odds})
-    def Odds():
+class GridLogic:
+    def __init__(self):
+        self.grid = ['B', 'R', 'S', 'R', 'X', 'R', 'B' , 'R', 'U']
+        self.chosenCell = 0
+
+        self.randomizeGrid()
+
+    def randomizeGrid(self):
+        self.grid[1] = self.Odds()
+        self.grid[3] = self.Odds()
+        self.grid[5] = self.Odds()
+        self.grid[7] = self.Odds()
+
+    def Odds(self):
         odds = random.randint(1,100)
         if odds > 66:
-            print("Someone took the odds, but they missed!")
+            return 'B'
         else:
-            print("Someone did a basic strike!")
-            Info.Random()
-    def output(num):
+            return 'X'
+        
+    def BasicAttack(self):
+        odds = random.randint(1,5)
+        print(f"Someone chose basic attack!! Your damage is ", {odds})
+
+        
+    def output(self):
         print("Attack is underway!")
-        match num:
-            case 4:
+        self.chosenCell = random.randint(0,8)
+        match self.grid[self.chosenCell]:
+            case 'X':
                 print("Someone did nothing!")
-            case 0 | 6:
-               Info.Random()
-            case 1 | 3 | 5 | 7:
-                Info.Odds()
-            case 8:
+            case 'B':
+               print("You did a basic attack!")
+               self.BasicAttack()
+            case 'U':
                 print("Someone chose an upgratable attack!")
-            case 2:
+            case 'S':
                 print("Someone used your special attack")
 
 
+playerGrid = GridLogic()
+enemyGrid = GridLogic()
 battle =  BattleData()
 battle.you = Knight()
 battle.enemy = Skeleton()
 
-print(battle.getAll())
+print(playerGrid.grid)
+print(enemyGrid.grid)
+
+#print(battle.getAll())
 
 while True:
-    chosen = input("\n Attack! Enter a grid number: ")
-    Info.output(int(chosen))
+    chosen = input("Attack! Press any key to continue: ")
+    print("Player is performing.")
+
+    playerGrid.output()
 
     #Enemy's turn
-    print("\n Now it's the enemy's turn! \n")
-    Info.output(int(random.randint(0,8)))
+    print("\n Now it's the enemy's turn!")
+    enemyGrid.output()
+
+    print('---------------------------------------------')
