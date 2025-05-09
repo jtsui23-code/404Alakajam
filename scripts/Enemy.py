@@ -6,7 +6,7 @@ class Skeleton(Entity):
 
         self.hearts = 8
         self.playerClass = 'Skeleton'
-        self.speicalMoveName = ''
+        self.specialMoveName = ''
         self.specialMove = None
         self.item = None
         self.upgradedAttack = None
