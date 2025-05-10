@@ -1,5 +1,6 @@
 from scripts.Player import Entity
 
+# Special inflicts status on player cell(s)
 class Skeleton(Entity):
 
     def __init__(self):
@@ -12,6 +13,7 @@ class Skeleton(Entity):
         self.item = None
         self.upgradedAttack = None
 
+# Special inflicts status on player cell(s)
 class Bat(Entity):
 
     def __init__(self):
@@ -38,6 +40,7 @@ class Slime(Entity):
         self.item = None
         self.upgradedAttack = None
 
+# Special inflicts status on player cell(s)
 class Undead(Entity):
 
     def __init__(self):
@@ -51,6 +54,7 @@ class Undead(Entity):
         self.item = None
         self.upgradedAttack = None
 
+# Special inflicts status on player cell(s)
 class Ghost(Entity):
 
     def __init__(self):
