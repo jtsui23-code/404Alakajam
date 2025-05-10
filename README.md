@@ -12,7 +12,7 @@ This is a randomized turn-based roguelike developed in Python using Pygame, crea
 
 ### 🔜 Work In Progress
 - Turn-based combat with enemy encounters
-- Skill system and cooldown management
+- Skill system
 - Upgrade shop with coin-based economy
 - Interactive dialogue system
 - Inventory with usable items (e.g., potions)
