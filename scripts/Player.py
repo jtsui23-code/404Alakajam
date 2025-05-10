@@ -27,6 +27,7 @@ class Knight(Entity):
 
         self.hearts = 8
         self.playerClass = 'Knight'
+        # Deals 150 % more damage next turn but take 50% more damage next turn.
         self.specialMoveName = 'Dulist\'s Gambit'
         self.specialMove = None
         self.item = None
@@ -39,7 +40,8 @@ class Wizard(Entity):
         self.hearts = 6
         self.playerClass = 'Wizard'
 
-         # Deals 1 heart of dmg and applies burn 60% of the time(1 heart per turn)
+        # Deals 2 heart of damage and applies burning status to 3 enemy cells. If the enemy lands on burned 
+        # cells gain burn DOT (1 heart/turn).
         self.specialMoveName = 'Incinerate'
         self.specialMove = None
         self.item = None
@@ -66,7 +68,7 @@ class Rat(Entity):
         self.hearts = 4
         self.playerClass = 'Rat'
 
-        # Life steals 1 heart
+        # Life steals 1 heart and turns 1 enemy B cell to a X cell for 2 turns.
         self.specialMoveName = 'Vermin Fangs' 
         self.specialMove = None
         self.item = None
