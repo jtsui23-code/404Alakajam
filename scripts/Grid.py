@@ -1,90 +1,100 @@
 import pygame
 import random
-from Item import Item  # Assuming Item.py exists in the same directory
+# from Item import Item
 
 pygame.init()
 
 class Grid:
-    def __init__(self, rows: int, cols: int, width: int, height: int):
-        self.rows = rows
-        self.cols = cols
+    def __init__(self, width: int, height: int, x: int, y: int, upgrade_available: bool = False):
+        self.rows = 3
+        self.cols = 3
         self.width = width
         self.height = height
-        self.cell_width = width // cols
-        self.cell_height = height // rows
-        self.grid = [[0 for _ in range(cols)] for _ in range(rows)]
+        self.cell_width = width // self.cols
+        self.cell_height = height // self.rows
+        self.x = x
+        self.y = y
+        self.upgrade_available = upgrade_available
+        self.grid = [['' for _ in range(self.cols)] for _ in range(self.rows)]
+        self.assets = {}
+        self._initialize_grid()
+        self.font = pygame.font.Font(None, 24)
 
-    def render_grid_lines(self, surface: pygame.Surface, color: tuple = (255, 255, 255)):
-        for row in range(self.rows):
-            for col in range(self.cols):
-                x = col * self.cell_width
-                y = row * self.cell_height
-                pygame.draw.rect(surface, color, (x, y, self.cell_width, self.cell_height), 1)
+    def _initialize_grid(self):
+        """Initializes the battle grid with fixed and random elements."""
+        # Middle cell is always 'X' (miss)
+        self.grid[1][1] = 'X'
+        # Corner cells
+        self.grid[0][0] = 'U' if self.upgrade_available else 'B' # Potential to be upgraded, if not just basic
+        self.grid[0][2] = 'S' # Always special
+        self.grid[2][0] = 'B' # Always attack
+        self.grid[2][2] = 'B' # Always attack
 
-    def render_grid_assets(self, surface: pygame.Surface, assets: dict):
-        for row in range(self.rows):
-            for col in range(self.cols):
-                x = col * self.cell_width
-                y = row * self.cell_height
-                cell_value = self.grid[row][col]
-                if cell_value != 0 and cell_value in assets:
-                    asset = assets[cell_value]
-                    surface.blit(asset, (x, y))
+        # Remaining four cells have a random chance (66% 'X', 33% 'BASIC')
+        for r in [0, 1, 2]:
+            for c in [0, 1, 2]:
+                if (r, c) not in [(1, 1), (0, 0), (0, 2), (2, 0), (2, 2)]:
+                    if random.random() < 0.33:
+                        self.grid[r][c] = 'B'
+                    else:
+                        self.grid[r][c] = 'X'
 
-    def set_cell(self, row: int, col: int, value: int):
-        if 0 <= row < self.rows and 0 <= col < self.cols:
-            self.grid[row][col] = value
-        else:
-            raise IndexError("Grid index out of range")
+    def load_assets(self, asset_map: dict):
+        self.assets = asset_map # For terminal testing, just store the map
 
-    def get_cell_value(self, row: int, col: int) -> int:
+    def get_random_cell_coordinates(self):
+        """Returns random row and column indices within the grid."""
+        row = random.randint(0, self.rows - 1)
+        col = random.randint(0, self.cols - 1)
+        return row, col
+
+    def get_action_at(self, row: int, col: int) -> str:
+        """Returns the action type at the specified grid cell."""
         if 0 <= row < self.rows and 0 <= col < self.cols:
             return self.grid[row][col]
         else:
             raise IndexError("Grid index out of range")
 
-    def clear_grid(self):
-        self.grid = [[0 for _ in range(self.cols)] for _ in range(self.rows)]
+# Part of the testing process
+    def __str__(self):
+        """String representation of the grid for terminal output."""
+        output = "Grid:\n"
+        for row in self.grid:
+            output += "| " + " | ".join(cell.ljust(14) for cell in row) + " |\n"
+            output += "-" * (17 * self.cols + 1) + "\n"
+        output += f"Position: (x={self.x}, y={self.y})\n"
+        output += f"Cell Dimensions: {self.cell_width}x{self.cell_height}\n"
+        output += f"Assets Loaded: {self.assets}\n"
+        return output
 
-    def get_grid_size(self) -> tuple[int, int]:
-        return self.rows, self.cols
 
-    def get_cell_dimensions(self) -> tuple[int, int]:
-        return self.cell_width, self.cell_height
-
-    def get_cell_center_position(self, row: int, col: int) -> tuple[int, int]:
-        if 0 <= row < self.rows and 0 <= col < self.cols:
-            x = col * self.cell_width + self.cell_width // 2
-            y = row * self.cell_height + self.cell_height // 2
-            return x, y
-        else:
-            raise IndexError("Grid index out of range")
-
-# Example usage (add this to the end of Grid.py)
+# Just testing from Gemini to see if Grid works in terminal
 if __name__ == "__main__":
-    WIDTH, HEIGHT = 600, 400
-    ROWS, COLS = 30, 20
-    SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("Grid")
+    test_grid_no_upgrade = Grid(200, 200, 50, 50)
+    print("Grid without upgrade:")
+    print(test_grid_no_upgrade)
+    print("-" * 30)
 
-    grid = Grid(ROWS, COLS, WIDTH, HEIGHT)
+    test_grid_with_upgrade = Grid(200, 200, 300, 50, upgrade_available=True)
+    print("Grid with upgrade:")
+    print(test_grid_with_upgrade)
+    print("-" * 30)
 
-    # Example of setting a cell value
-    grid.set_cell(5, 10, 1)
+    asset_map = {
+        'B': 'assets/basic.png',
+        'U': 'assets/upgrade.png',
+        'S': 'assets/special.png',
+        'X': 'assets/miss.png'
+    }
+    test_grid_with_assets = Grid(200, 200, 50, 300)
+    test_grid_with_assets.load_assets(asset_map)
+    print("Grid with assets loaded:")
+    print(test_grid_with_assets)
+    print("-" * 30)
 
-    # Example of loading an asset (assuming you have a 'red_square.png' and Item class works)
-    assets = {1: pygame.Surface((grid.cell_width, grid.cell_height))}
-    assets[1].fill((100, 100, 100))
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        SCREEN.fill((255, 255, 255))
-        grid.render_grid_lines(SCREEN)
-        grid.render_grid_assets(SCREEN, assets)
-        pygame.display.flip()
-
-    pygame.quit()
+    # Test random cell selection
+    print("Testing random cell selection:")
+    for _ in range(5):
+        row, col = test_grid_no_upgrade.get_random_cell_coordinates()
+        action = test_grid_no_upgrade.get_action_at(row, col)
+        print(f"Randomly selected cell ({row}, {col}): Action = {action}")
