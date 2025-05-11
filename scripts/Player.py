@@ -55,7 +55,7 @@ class Goblin(Entity):
         self.hearts = 4
         self.playerClass = 'Goblin'
 
-         # Permanty reduces enemy dmg by 50% per hit. 
+        # Permanty reduces enemy dmg by 50% per hit. 
         self.specialMoveName = 'Rusty Shiv'
         self.specialMove = None
         self.item = None
