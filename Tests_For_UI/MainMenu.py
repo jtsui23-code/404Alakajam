@@ -37,6 +37,7 @@ while running:
     
     # Render the main menu - now just passing the screen
     handler.render('character')
+    #extra line. ignore. git test 
     # Update the display
     pygame.display.flip()
     clock.tick(60)
