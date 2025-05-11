@@ -40,7 +40,7 @@
 - **Effect**: Gain **+1 heart** max HP, but lose **1 heart permanently** if you ever heal to full.  
 
 ### **Greed’s Contract**  
-- **Effect**: For every 3 missed attacks (X), gain a **Golden Cell** (guaranteed crit) next turn.  
+- **Effect**: For every 3 missed attacks (X), deals **+ 1 hearts** next turn. 
 
 ---
 
@@ -51,8 +51,7 @@
 ### **Pandora’s Box**  
 - **Effect**: Start each battle with **all non-special cells as X**, but landing on X cell promotes it (X → B → U).
 
-### **Fickle Talisman**  
-- **Effect**: Every turn, one random cell’s X chance **swaps between 15% and 85%**.  
+
 
 ---
 
@@ -60,8 +59,6 @@
 ### **Hornet Nest**  
 - **Effect**: Killing an enemy spawns **1–2 temporary attack cells** next battle.  
 
-### **Cursed Shackles**  
-- **Effect**: Enemies take **0.5 hearts** damage every time they attack a non-special cell.  
 
 ### **Siphon Glyph**  
 - **Effect**: Steal the enemy’s next special move effect (e.g., Ghost’s curse) for yourself.  
@@ -70,17 +67,8 @@
 
 ## **Meta-Defining Game-Changers**  
 ### **Necronomicon**  
-- **Effect**: Replace your special move with **Summon Undead**. Sacrifice **1 heart** to summon a minion that attacks for **0.5 hearts/turn**.  
-
-### **Doppelganger Bell**  
-- **Effect**: Your upgraded attack cell splits into **two mirrored cells** (same row/column). Double crits or double misses!  
+- **Effect**: Sacrifice speical tcell to apply **0.5 hearts/turn** DOT.  
 
 ### **Black Hole Core**  
-- **Effect**: After 3 misses, the next X cell you hit **destroys the entire row/column**, dealing **2 hearts** damage.  
-
+- **Effect**: After 3 misses, the next X cell you land on **removes enemy column**, dealing **2 hearts** damage.  
 ---
-
-## **Synergy Examples**  
-- **Rat + Poisoned Dice + Plaguebite** = 1.5 hearts/turn poison (3 stacks).  
-- **Wizard + Chaos Catalyst + Loaded Die** = Turn the grid into a crit slot machine.  
-- **Knight + Vampiric Gauntlet + Mirror Charm** = Sustain tank with counter damage.  
