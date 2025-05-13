@@ -6,14 +6,38 @@ import sys
 from .Sound import MusicManager
 
 # Manages switching between different game states
-class StateManager():
-    def __init__(self):
-        # Dictionary storing all game state classes
-        self.allStates = {
+
+# In scripts/State.py
+
+# Assuming your state classes (MainMenuState, ShopState, etc.) are defined
+# in this file or imported appropriately. For example:
+# from .main_menu_state import MainMenuState # If they are in separate files
+# from .shop_state import ShopState
+# ... and so on for all state classes
+
+class StateManager:
+    # --- Class-level attributes instead of instance attributes ---
+    all_states_instances = {}  # Stores instances of your state classes
+    current_state_name = None
+    # setAction = None # This was in your __init__, its purpose isn't clear from the code
+                      # If needed, it would also become a class attribute:
+    # set_action_value = None
+
+    @classmethod
+    def initialize(cls):
+        """
+        Initializes the state manager's class-level data.
+        Call this once when your game starts.
+        """
+        # Ensure state classes like MainMenuState, ShopState are defined/imported
+        # For example, if MainMenuState is defined in this file:
+        # global MainMenuState, ShopState, ... (if needed, but direct use is fine if in scope)
+
+        cls.all_states_instances = {
             'main': MainMenuState(),
             'shop': ShopState(),
             'character': CharacterSelectState(),
-            'levelSelect': LevelSelectState(), 
+            'levelSelect': LevelSelectState(),
             'roomSelect': RoomSelectState(),
             'roomRolling': RoomRollingState(),
             'battle': BattleState(),
@@ -21,29 +45,63 @@ class StateManager():
             'gameOver': GameOver()
         }
 
-        # Set the initial state to main menu
-        self.currentState = 'main'
-        # Activate the main menu state
-        self.allStates[self.currentState].changeStateStatus(True)
-        # Start the music for the main menu
+        cls.setAction = None
 
+        cls.current_state_name = 'main'  # Set the initial state name
 
-        # self.allStates[self.currentState].startMusic()
+        # Activate the initial state
+        if cls.current_state_name in cls.all_states_instances:
+            initial_state_object = cls.all_states_instances[cls.current_state_name]
+            initial_state_object.changeStateStatus(True)
+            # initial_state_object.startMusic() # Uncomment if needed and defined in your State classes
+            print(f"StateManager initialized. Current state: {cls.current_state_name}")
+        else:
+            print(f"Error: Initial state '{cls.current_state_name}' not found during StateManager initialization.")
 
-    def checkCurrentState(self, currentState=''):
-        return self.currentState == currentState
-    
+    @ classmethod
+    def setAction(cls, action=""):
+        cls.setAction = action
 
-    # Switches to a different game state
-    def switchState(self, nextState=''):
+    @classmethod
+    def checkCurrentState(cls, state_name_to_check=''):
+        return cls.current_state_name == state_name_to_check
+
+    @classmethod
+    def switchState(cls, next_state_name=''):
+        print(f"StateManager: Attempting to switch from '{cls.current_state_name}' to '{next_state_name}'")
         # Deactivate the current state
-        self.allStates[self.currentState].changeStateStatus(False)
-        # Change to the new state
-        self.currentState = nextState
+        if cls.current_state_name in cls.all_states_instances:
+            current_state_object = cls.all_states_instances[cls.current_state_name]
+            current_state_object.changeStateStatus(False)
+            # if hasattr(current_state_object, 'stopMusic'):
+            #     current_state_object.stopMusic()
+            print(f"StateManager: Deactivated state '{cls.current_state_name}'.")
+
+        # Change to the new state name
+        cls.current_state_name = next_state_name
+
         # Activate the new state
-        self.allStates[self.currentState].changeStateStatus(True)
-        # Start the music for the new state
-        self.allStates[self.currentState].startMusic()
+        if cls.current_state_name in cls.all_states_instances:
+            next_state_object = cls.all_states_instances[cls.current_state_name]
+            next_state_object.changeStateStatus(True)
+            if hasattr(next_state_object, 'startMusic'): # Check if the method exists
+                 next_state_object.startMusic()
+            print(f"StateManager: Activated state '{cls.current_state_name}'.")
+        else:
+            print(f"Warning: State '{cls.current_state_name}' not found when trying to activate.")
+
+    @classmethod
+    def getCurrentStateObject(cls):
+        """Returns the actual instance of the current state."""
+        return cls.all_states_instances.get(cls.current_state_name)
+
+# Important: You would need to define or import your state classes
+# (MainMenuState, ShopState, etc.) before StateManager if you refer to them directly
+# as above. For example:
+# class State: ...
+# class MainMenuState(State): ...
+# class ShopState(State): ...
+# etc.
 
 
 # Base class for all game states
