@@ -33,17 +33,37 @@ class Game:
     def run(self):
         while self.running: 
 
+
             # Handle events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-            
-            if self.stateManager.checkCurrentState('main'):
-                print("You are currently in the main state")
-                self.handler.render('main')
+                
 
+            if self.stateManager.checkCurrentState('main'):
+
+                actionFromUI = self.handler.render('menu') 
+
+            elif self.stateManager.checkCurrentState('shop'):
+
+                actionFromUI = self.handler.render('shop')
+
+            elif self.stateManager.checkCurrentState('character'):
+                actionFromUI = self.handler.render('character')
+
+            print(actionFromUI)
+            if actionFromUI:
+                print(f"Game loop received action: {actionFromUI}") 
+
+                if actionFromUI == "Start button clicked":
+                    self.handler.stop('menu')                    
+                    self.stateManager.switchState('character')
+
+            # Updates the display
+            pygame.display.flip()
             # Sets FPS to 60
             pygame.time.Clock().tick(60)    
+
 if __name__ == "__main__":
     game = Game()
     game.run()
