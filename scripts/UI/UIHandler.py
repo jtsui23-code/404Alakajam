@@ -25,12 +25,8 @@ class UIHandler:
                 #self.Character(screen)
             case 'difficulty':
                 pass
-<<<<<<< HEAD
 
         return triggered_action 
-=======
-            
->>>>>>> 294a718ce4c10a1214caffb0fcada4c2a336daaa
     def stop(self, atr):
         match atr:
             case'menu':

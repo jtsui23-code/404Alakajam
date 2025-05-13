@@ -31,18 +31,7 @@ class StateManager():
 
 
 
-<<<<<<< HEAD
         # Set the initial state to main menu
-=======
-    @classmethod
-    def checkCurrentState(cls, state_name_to_check=''):
-        if cls.current_state_name == None:
-            cls.current_state_name = 'main'
-            
-        print(f"current state is {cls.current_state_name}")
-        print(f"name to check is {state_name_to_check}")
-        return cls.current_state_name == state_name_to_check
->>>>>>> 294a718ce4c10a1214caffb0fcada4c2a336daaa
 
         self.currentState = 'main'
 
@@ -55,30 +44,30 @@ class StateManager():
 
 
 
-def checkCurrentState(self, currentState):
+    def checkCurrentState(self, currentState):
 
-    return self.currentState == currentState
+        return self.currentState == currentState
 
 
-# Switches to a different game state
+    # Switches to a different game state
 
-def switchState(self, nextState=''):
+    def switchState(self, nextState=''):
 
-# Deactivate the current state
+    # Deactivate the current state
 
-    self.allStates[self.currentState].changeStateStatus(False)
+        self.allStates[self.currentState].changeStateStatus(False)
 
-    # Change to the new state
+        # Change to the new state
 
-    self.currentState = nextState
+        self.currentState = nextState
 
-    # Activate the new state
+        # Activate the new state
 
-    self.allStates[self.currentState].changeStateStatus(True)
+        self.allStates[self.currentState].changeStateStatus(True)
 
-    # Start the music for the new state
+        # Start the music for the new state
 
-    self.allStates[self.currentState].startMusic()
+        self.allStates[self.currentState].startMusic()
 
 
 # (MainMenuState, ShopState, etc.) before StateManager if you refer to them directly

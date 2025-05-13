@@ -37,7 +37,7 @@ class Game:
                     self.running = False
                 
             
-            print(StateManager.checkCurrentState('main'))
+            print(self.stateManager.checkCurrentState('main'))
 
             if self.stateManager.currentState == 'main':
 
