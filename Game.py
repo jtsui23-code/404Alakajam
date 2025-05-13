@@ -7,7 +7,7 @@ from scripts.State import StateManager
 class Game:
     def __init__(self):
         pygame.init()
-
+        self.stateManager = StateManager()
         # Sets the dimensions of the Pygame window 1280x720
         self.width = 1280
         self.height = 720
@@ -30,30 +30,45 @@ class Game:
     def run(self):
         while self.running: 
 
-
+            actionFromUI = None
             # Handle events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 
 
-            if StateManager.checkCurrentState('main'):
+            if self.stateManager.currentState == 'main':
 
-                self.handler.render('menu') 
+                actionFromUI = self.handler.render('menu') 
                 
-            elif StateManager.checkCurrentState('shop'):
+            elif self.stateManager.currentState == 'shop':
 
-                self.handler.render('shop')
+                actionFromUI = self.handler.render('shop')
 
-            elif StateManager.checkCurrentState('character'):
-                self.handler.render('character')
+            elif self.stateManager.currentState == 'character':
+                actionFromUI = self.handler.render('character')
 
-            if StateManager.setAction:
-                
+            
 
-                if StateManager.setAction == "Start":
+            if actionFromUI:
+                print(f"value of actionFromUI is ", {actionFromUI})
+
+
+                if actionFromUI == "Start Button":
                     self.handler.stop('menu')                    
-                    StateManager.switchState('character')
+                    self.stateManager.switchState('character')
+
+                elif actionFromUI == "Shop Button":
+                    self.handler.stop('menu')
+                    self.stateManager.switchState('shop')
+
+
+                elif actionFromUI == "Load Button":
+                    self.handler.stop('menu')
+                    self.stateManager.switchState('character')
+
+
+
 
             # Updates the display
             pygame.display.flip()
