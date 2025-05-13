@@ -3,9 +3,12 @@ from scripts.UI.main_menu import MainMenu
 from scripts.UI.char_select import Character
 
 
+
+
 class UIHandler:
     def __init__(self, screen):
         self.screen = screen
+        
        # self.Shop = Shop()
        # self.Character = Character()
 
@@ -22,8 +25,12 @@ class UIHandler:
                 #self.Character(screen)
             case 'difficulty':
                 pass
+<<<<<<< HEAD
 
         return triggered_action 
+=======
+            
+>>>>>>> 294a718ce4c10a1214caffb0fcada4c2a336daaa
     def stop(self, atr):
         match atr:
             case'menu':

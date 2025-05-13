@@ -31,7 +31,18 @@ class StateManager():
 
 
 
+<<<<<<< HEAD
         # Set the initial state to main menu
+=======
+    @classmethod
+    def checkCurrentState(cls, state_name_to_check=''):
+        if cls.current_state_name == None:
+            cls.current_state_name = 'main'
+            
+        print(f"current state is {cls.current_state_name}")
+        print(f"name to check is {state_name_to_check}")
+        return cls.current_state_name == state_name_to_check
+>>>>>>> 294a718ce4c10a1214caffb0fcada4c2a336daaa
 
         self.currentState = 'main'
 
