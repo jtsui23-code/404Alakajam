@@ -11,6 +11,7 @@ class UIHandler:
     def render(self,atr):
         match atr:
             case 'menu':
+                
                 MainMenu.render(self.screen)
             case 'shop':
                 pass
