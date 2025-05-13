@@ -1,7 +1,6 @@
 import random
 import math
 import pygame
-from scripts.State import StateManager 
 
 class MainMenu:
     # Static class variables
@@ -94,6 +93,8 @@ class MainMenu:
         current_time = pygame.time.get_ticks()
         dt = current_time - cls.last_time if cls.last_time > 0 else 16
         cls.last_time = current_time
+
+        action_key_from_input = cls._handle_input(pygame) # Get action key
         
         # Handle input
         cls._handle_input(pygame)
@@ -169,6 +170,9 @@ class MainMenu:
         version_rect = version_text.get_rect(bottomright=(cls.WIDTH-20 + shake_offset[0], 
                                                         cls.HEIGHT-20 + shake_offset[1]))
         screen.blit(version_text, version_rect)
+
+        return action_key_from_input # Return the key
+
     
     @classmethod
     def _initialize(cls, pygame):
@@ -207,11 +211,17 @@ class MainMenu:
         button_width, button_height = 200, 50
         cls.buttons = [
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 300, button_width, button_height, 
-                          "START", StateManager.setAction("Start")),
+                          "START", action_key= "Start Button"),
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 370, button_width, button_height, 
+<<<<<<< HEAD
+                          "SHOP", action_key= "Shop Button"),
+            cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 440, button_width, button_height, 
+                          "LOAD", action_key= "Load Button")
+=======
                           "SHOP", print("SHOP")),
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 440, button_width, button_height, 
                           "LOAD", print("LOAD"))
+>>>>>>> 294a718ce4c10a1214caffb0fcada4c2a336daaa
         ]
         
         # Create floating skulls
@@ -292,11 +302,15 @@ class MainMenu:
         """Handle user input"""
         mouse_pos = pygame.mouse.get_pos()
         mouse_pressed = pygame.mouse.get_pressed()[0]
+
         
         # Update buttons
         for button in cls.buttons:
-            button.update(mouse_pos, mouse_pressed)
-    
+            action_key = button.update(mouse_pos, mouse_pressed)
+            if action_key:
+                return action_key
+            
+        return None    
     @classmethod
     def _update(cls, dt):
         """Update game elements"""
@@ -547,13 +561,16 @@ class MainMenu:
                                    (int(link['x']), int(link['y'])), 2)
     
     class PixelButton:
-        def __init__(self, pygame, x, y, width, height, text, action=None):
+        def __init__(self, pygame, x, y, width, height, text, action_key=None, direct_action_on_click=None):
             self.x = x
             self.y = y
             self.width = width
             self.height = height
             self.text = text
-            self.action = action
+
+            self.action_key = action_key
+            self.direct_action_on_click = direct_action_on_click
+
             self.hovered = False
             self.clicked = False
             self.font = pygame.font.Font(None, 36)
@@ -580,13 +597,22 @@ class MainMenu:
             self.hovered = (self.x <= mouse_pos[0] <= self.x + self.width and 
                            self.y <= mouse_pos[1] <= self.y + self.height)
             
+            triggered_action_key = None  # This will be returned
+
             # Handle click
             if self.hovered and mouse_pressed and not self.clicked:
                 self.clicked = True
-                if self.action:
-                    self.action()
+
+
+                if self.direct_action_on_click:
+                    self.direct_action_on_click() # e.g., print("Button was pressed")
+                if self.action_key:
+                    triggered_action_key = self.action_key # Signal that this button's main action should occur
+
             elif not mouse_pressed:
                 self.clicked = False
+
+            return triggered_action_key
         
         def draw(self, pygame, screen):
             # Draw button background
