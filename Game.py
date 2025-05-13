@@ -8,9 +8,6 @@ class Game:
     def __init__(self):
         pygame.init()
 
-        # Creates instance of state manager for switching bewteen different states in the game.
-        self.stateManager = StateManager()
-
         # Sets the dimensions of the Pygame window 1280x720
         self.width = 1280
         self.height = 720
@@ -40,24 +37,23 @@ class Game:
                     self.running = False
                 
 
-            if self.stateManager.checkCurrentState('main'):
+            if StateManager.checkCurrentState('main'):
 
-                actionFromUI = self.handler.render('menu') 
+                self.handler.render('menu') 
+                
+            elif StateManager.checkCurrentState('shop'):
 
-            elif self.stateManager.checkCurrentState('shop'):
+                self.handler.render('shop')
 
-                actionFromUI = self.handler.render('shop')
+            elif StateManager.checkCurrentState('character'):
+                self.handler.render('character')
 
-            elif self.stateManager.checkCurrentState('character'):
-                actionFromUI = self.handler.render('character')
+            if StateManager.setAction:
+                
 
-            print(actionFromUI)
-            if actionFromUI:
-                print(f"Game loop received action: {actionFromUI}") 
-
-                if actionFromUI == "Start button clicked":
+                if StateManager.setAction == "Start":
                     self.handler.stop('menu')                    
-                    self.stateManager.switchState('character')
+                    StateManager.switchState('character')
 
             # Updates the display
             pygame.display.flip()

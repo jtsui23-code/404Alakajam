@@ -1,6 +1,7 @@
 import random
 import math
 import pygame
+from State import StateManager 
 
 class MainMenu:
     # Static class variables
@@ -206,11 +207,11 @@ class MainMenu:
         button_width, button_height = 200, 50
         cls.buttons = [
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 300, button_width, button_height, 
-                          "START", lambda: print("Start button clicked")),
+                          "START", StateManager.setAction("Start")),
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 370, button_width, button_height, 
-                          "SHOP", lambda: print("Shop button clicked")),
+                          "SHOP", StateManager.setAction("Shop")),
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 440, button_width, button_height, 
-                          "LOAD", lambda: print("Load button clicked"))
+                          "LOAD", StateManager.setAction("Load"))
         ]
         
         # Create floating skulls
@@ -556,8 +557,6 @@ class MainMenu:
             self.hovered = False
             self.clicked = False
             self.font = pygame.font.Font(None, 36)
-
-            
             
             # Create button surfaces
             self.normal_surface = pygame.Surface((width, height), pygame.SRCALPHA)
