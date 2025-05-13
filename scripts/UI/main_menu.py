@@ -556,6 +556,8 @@ class MainMenu:
             self.hovered = False
             self.clicked = False
             self.font = pygame.font.Font(None, 36)
+
+            
             
             # Create button surfaces
             self.normal_surface = pygame.Surface((width, height), pygame.SRCALPHA)
