@@ -1,100 +1,86 @@
 import pygame
-import random
-# from Item import Item
-
-pygame.init()
 
 class Grid:
-    def __init__(self, width: int, height: int, x: int, y: int, upgrade_available: bool = False):
-        self.rows = 3
-        self.cols = 3
-        self.width = width
-        self.height = height
-        self.cell_width = width // self.cols
-        self.cell_height = height // self.rows
+    def __init__(self, x, y, width, height, rows, cols):
         self.x = x
         self.y = y
-        self.upgrade_available = upgrade_available
-        self.grid = [['' for _ in range(self.cols)] for _ in range(self.rows)]
-        self.assets = {}
-        self._initialize_grid()
-        self.font = pygame.font.Font(None, 24)
+        self.width = width
+        self.height = height
+        self.rows = rows
+        self.cols = cols
+        self.cell_width = width // cols
+        self.cell_height = height // rows
+        self.cells = [[None for _ in range(cols)] for _ in range(rows)]
 
-    def _initialize_grid(self):
-        """Initializes the battle grid with fixed and random elements."""
-        # Middle cell is always 'X' (miss)
-        self.grid[1][1] = 'X'
-        # Corner cells
-        self.grid[0][0] = 'U' if self.upgrade_available else 'B' # Potential to be upgraded, if not just basic
-        self.grid[0][2] = 'S' # Always special
-        self.grid[2][0] = 'B' # Always attack
-        self.grid[2][2] = 'B' # Always attack
-
-        # Remaining four cells have a random chance (66% 'X', 33% 'BASIC')
-        for r in [0, 1, 2]:
-            for c in [0, 1, 2]:
-                if (r, c) not in [(1, 1), (0, 0), (0, 2), (2, 0), (2, 2)]:
-                    if random.random() < 0.33:
-                        self.grid[r][c] = 'B'
-                    else:
-                        self.grid[r][c] = 'X'
-
-    def load_assets(self, asset_map: dict):
-        self.assets = asset_map # For terminal testing, just store the map
-
-    def get_random_cell_coordinates(self):
-        """Returns random row and column indices within the grid."""
-        row = random.randint(0, self.rows - 1)
-        col = random.randint(0, self.cols - 1)
-        return row, col
-
-    def get_action_at(self, row: int, col: int) -> str:
-        """Returns the action type at the specified grid cell."""
+    def fill_cell(self, row, col, text, font, callback):
         if 0 <= row < self.rows and 0 <= col < self.cols:
-            return self.grid[row][col]
-        else:
-            raise IndexError("Grid index out of range")
+            rect = pygame.Rect(
+                self.x + col * self.cell_width + 2,
+                self.y + row * self.cell_height + 2,
+                self.cell_width - 4,
+                self.cell_height - 4
+            )
+            self.cells[row][col] = {
+                "rect": rect,
+                "text": text,
+                "image": None,
+                "callback": callback
+            }
 
-# Part of the testing process
-    def __str__(self):
-        """String representation of the grid for terminal output."""
-        output = "Grid:\n"
-        for row in self.grid:
-            output += "| " + " | ".join(cell.ljust(14) for cell in row) + " |\n"
-            output += "-" * (17 * self.cols + 1) + "\n"
-        output += f"Position: (x={self.x}, y={self.y})\n"
-        output += f"Cell Dimensions: {self.cell_width}x{self.cell_height}\n"
-        output += f"Assets Loaded: {self.assets}\n"
-        return output
+    def fill_cell_with_image(self, row, col, image_surface, callback):
+        if 0 <= row < self.rows and 0 <= col < self.cols:
+            rect = pygame.Rect(
+                self.x + col * self.cell_width + 2,
+                self.y + row * self.cell_height + 2,
+                self.cell_width - 4,
+                self.cell_height - 4
+            )
+            self.cells[row][col] = {
+                "rect": rect,
+                "text": None,
+                "image": image_surface,
+                "callback": callback
+            }
 
+    def draw(self, surface, font):
+        mouse_pos = pygame.mouse.get_pos()
+        dungeon_color = (30, 30, 30)
+        border_color = (70, 70, 70)
+        hover_color = (90, 0, 0)
+        button_color = (60, 0, 0)
+        text_color = (220, 220, 220)
 
-# Just testing from Gemini to see if Grid works in terminal
-if __name__ == "__main__":
-    test_grid_no_upgrade = Grid(200, 200, 50, 50)
-    print("Grid without upgrade:")
-    print(test_grid_no_upgrade)
-    print("-" * 30)
+        for row in range(self.rows):
+            for col in range(self.cols):
+                base_rect = pygame.Rect(
+                    self.x + col * self.cell_width,
+                    self.y + row * self.cell_height,
+                    self.cell_width,
+                    self.cell_height
+                )
+                pygame.draw.rect(surface, dungeon_color, base_rect)
+                pygame.draw.rect(surface, border_color, base_rect, 2)
 
-    test_grid_with_upgrade = Grid(200, 200, 300, 50, upgrade_available=True)
-    print("Grid with upgrade:")
-    print(test_grid_with_upgrade)
-    print("-" * 30)
+                cell = self.cells[row][col]
+                if cell:
+                    is_hover = cell["rect"].collidepoint(mouse_pos)
+                    color = hover_color if is_hover else button_color
+                    pygame.draw.rect(surface, color, cell["rect"])
+                    pygame.draw.rect(surface, border_color, cell["rect"], 2)
 
-    asset_map = {
-        'B': 'assets/basic.png',
-        'U': 'assets/upgrade.png',
-        'S': 'assets/special.png',
-        'X': 'assets/miss.png'
-    }
-    test_grid_with_assets = Grid(200, 200, 50, 300)
-    test_grid_with_assets.load_assets(asset_map)
-    print("Grid with assets loaded:")
-    print(test_grid_with_assets)
-    print("-" * 30)
+                    if cell["image"]:
+                        img = pygame.transform.scale(cell["image"], cell["rect"].size)
+                        surface.blit(img, cell["rect"].topleft)
+                    elif cell["text"]:
+                        text_surf = font.render(cell["text"], True, text_color)
+                        text_rect = text_surf.get_rect(center=cell["rect"].center)
+                        surface.blit(text_surf, text_rect)
 
-    # Test random cell selection
-    print("Testing random cell selection:")
-    for _ in range(5):
-        row, col = test_grid_no_upgrade.get_random_cell_coordinates()
-        action = test_grid_no_upgrade.get_action_at(row, col)
-        print(f"Randomly selected cell ({row}, {col}): Action = {action}")
+    def handle_event(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            pos = event.pos
+            for row in range(self.rows):
+                for col in range(self.cols):
+                    cell = self.cells[row][col]
+                    if cell and cell["rect"].collidepoint(pos):
+                        cell["callback"]()
