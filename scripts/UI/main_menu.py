@@ -1,7 +1,7 @@
 import random
 import math
 import pygame
-from State import StateManager 
+from scripts.State import StateManager 
 
 class MainMenu:
     # Static class variables
