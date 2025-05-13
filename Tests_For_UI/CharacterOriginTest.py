@@ -2,9 +2,7 @@ import os
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 """
-Jack, if you are reading this. The only important part is 
-Line 14, 29, and 38
-That shows you how to use the UI module
+Ignore lines above ^^^^
 
 """
 
