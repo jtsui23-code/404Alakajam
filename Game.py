@@ -36,6 +36,8 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
                 
+            
+            print(StateManager.checkCurrentState('main'))
 
             if StateManager.checkCurrentState('main'):
 

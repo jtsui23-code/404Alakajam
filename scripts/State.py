@@ -64,6 +64,11 @@ class StateManager:
 
     @classmethod
     def checkCurrentState(cls, state_name_to_check=''):
+        if cls.current_state_name == None:
+            cls.current_state_name = 'main'
+            
+        print(f"current state is {cls.current_state_name}")
+        print(f"name to check is {state_name_to_check}")
         return cls.current_state_name == state_name_to_check
 
     @classmethod

@@ -22,26 +22,13 @@ class UIHandler:
                 Character.draw(self.screen)
                 #self.Character(screen)
             case 'difficulty':
-<<<<<<< HEAD
-                DifficultySelector.initialize(self.screen)
-                DifficultySelector.draw(self.screen)
-        
-=======
                 pass
->>>>>>> e7dd87962495958ae05dc335d3c08ee130fc5b3a
+            
     def stop(self, atr):
         match atr:
             case'menu':
                 MainMenu.stop()
             case 'character':
                 Character.stop()
-<<<<<<< HEAD
-            case _:
-                MainMenu.stop()
-                Character.stop()
-    def setAction(self):
-        pass
-=======
 
     
->>>>>>> e7dd87962495958ae05dc335d3c08ee130fc5b3a

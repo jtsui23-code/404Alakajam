@@ -209,9 +209,9 @@ class MainMenu:
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 300, button_width, button_height, 
                           "START", StateManager.setAction("Start")),
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 370, button_width, button_height, 
-                          "SHOP", StateManager.setAction("Shop")),
+                          "SHOP", print("SHOP")),
             cls.PixelButton(pygame, cls.WIDTH//2 - button_width//2, 440, button_width, button_height, 
-                          "LOAD", StateManager.setAction("Load"))
+                          "LOAD", print("LOAD"))
         ]
         
         # Create floating skulls
