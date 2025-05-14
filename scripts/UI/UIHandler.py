@@ -27,8 +27,18 @@ class UIHandler:
                 #self.Character(screen)
             case 'difficulty':
                 pass
-
+            
         return triggered_action 
+
+
+    def handleEvent(self, state, event):
+        match state:
+            case 'shop':
+                Shop.handle_event(event)
+            case 'character':
+                Character.handle_event(event)
+
+
     def stop(self, atr):
         match atr:
             case'menu':
