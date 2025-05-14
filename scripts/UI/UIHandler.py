@@ -1,6 +1,8 @@
 from scripts.UI.main_menu import MainMenu
 #from scripts.UI.shop import Shop
 from scripts.UI.char_select import Character
+from scripts.UI.shop import Shop
+
 
 
 
@@ -18,8 +20,8 @@ class UIHandler:
             case 'menu':
                 triggered_action = MainMenu.render(self.screen)
             case 'shop':
-                pass
- #               self.Shop.render(self.screen)
+                triggered_action = Shop.render(self.screen)
+
             case 'character':
                 triggered_action = Character.draw(self.screen)
                 #self.Character(screen)
