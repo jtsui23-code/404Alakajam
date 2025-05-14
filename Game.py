@@ -36,9 +36,6 @@ class Game:
                 if event.type == pygame.QUIT:
                     self.running = False
                 
-            
-            print(self.stateManager.checkCurrentState('main'))
-
             if self.stateManager.currentState == 'main':
 
                 actionFromUI = self.handler.render('menu') 
@@ -55,7 +52,6 @@ class Game:
             if actionFromUI:
                 print(f"value of actionFromUI is ", {actionFromUI})
 
-
                 if actionFromUI == "Start Button":
                     self.handler.stop('menu')                    
                     self.stateManager.switchState('character')
@@ -65,9 +61,9 @@ class Game:
                     self.stateManager.switchState('shop')
 
 
-                elif actionFromUI == "Load Button":
-                    self.handler.stop('menu')
-                    self.stateManager.switchState('character')
+                # elif actionFromUI == "Load Button":
+                #     self.handler.stop('menu')
+                #     self.stateManager.switchState('character')
 
 
 

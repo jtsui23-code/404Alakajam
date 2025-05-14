@@ -141,9 +141,9 @@ class MainMenuState(State):
         super().__init__()
 
     # Play the title theme when in this state
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='TitleTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='TitleTheme', loop=True)
 
 
 # Shop state
@@ -152,9 +152,9 @@ class ShopState(State):
         super().__init__()
 
     # Play the shop theme when in this state
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='ShopTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='ShopTheme', loop=True)
 
 
 # Character selection state
@@ -163,9 +163,9 @@ class CharacterSelectState(State):
         super().__init__()
 
     # Play the title theme during character select
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='TitleTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='TitleTheme', loop=True)
 
 
 # Level selection state
@@ -174,9 +174,9 @@ class LevelSelectState(State):
         super().__init__()
 
     # Play the title theme during level select
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='TitleTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='TitleTheme', loop=True)
 
 
 # Room selection state
@@ -185,9 +185,9 @@ class RoomSelectState(State):
         super().__init__()
 
     # Play the room select theme
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='RoomSelectTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='RoomSelectTheme', loop=True)
 
 
 # Room rolling state
@@ -196,9 +196,9 @@ class RoomRollingState(State):
         super().__init__()
 
     # Play the room select theme (same as above, maybe for continuity)
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='RoomSelectTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='RoomSelectTheme', loop=True)
 
 
 # Battle state
@@ -207,9 +207,9 @@ class BattleState(State):
         super().__init__()
 
     # Play the battle theme when in battle
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='BattleTheme1', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='BattleTheme1', loop=True)
             # Other options for different phases
             # Sound.playTheme(songName='BattleTheme2', loop=True)
             # Sound.playTheme(songName='VictoryTheme', loop=True)
@@ -221,9 +221,9 @@ class LoadState(State):
         super().__init__()
 
     # Play the title theme during loading
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='TitleTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='TitleTheme', loop=True)
 
 
 # Game over state
@@ -232,6 +232,6 @@ class GameOver(State):
         super().__init__()
 
     # Play the game over theme when in this state
-    def startMusic(self):
-        if self.isCurrentState:
-            MusicManager.playTheme(songName='GameOverTheme', loop=True)
+    # def startMusic(self):
+    #     if self.isCurrentState:
+    #         MusicManager.playTheme(songName='GameOverTheme', loop=True)
