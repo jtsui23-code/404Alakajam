@@ -2,6 +2,8 @@ from scripts.UI.main_menu import MainMenu
 #from scripts.UI.shop import Shop
 from scripts.UI.char_select import Character
 from scripts.UI.shop import Shop
+from scripts.UI.difficulty import DifficultySelector
+
 
 
 
@@ -26,7 +28,7 @@ class UIHandler:
                 triggered_action = Character.draw(self.screen)
                 #self.Character(screen)
             case 'difficulty':
-                pass
+                triggered_action = DifficultySelector.draw(self.screen)
             
         return triggered_action 
 
@@ -37,6 +39,9 @@ class UIHandler:
                 Shop.handle_event(event)
             case 'character':
                 Character.handle_event(event)
+
+            case 'levelSelect':
+                DifficultySelector.update(event)
 
 
     def stop(self, atr):
