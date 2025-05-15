@@ -40,12 +40,30 @@ class Game:
                 # Checks if the user clicked the X on the top right.
                 if event.type == pygame.QUIT:
                     self.running = False
-                
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+
+                        # If you are in the shop state/screen and click esc key, you return to the main menu.
+                        if self.stateManager.currentState == 'shop':
+                            self.handler.stop('shop')
+                            self.stateManager.switchState('main')
+                    
+                    if event.key == pygame.K_RETURN:
+
+                        if self.stateManager.currentState =='character':
+                            print("should be going to level select")
+                            self.handler.stop('character')
+                            self.stateManager.switchState('levelSelect')
+
                 # Handles events within the different States other than main. This is different from 
                 # actionFromUI because this handle event section does not do anything regarding state transition 
                 # just the events self contained in the current State of the game.
                 if not self.stateManager.currentState == 'main':
                     self.handler.handleEvent(self.stateManager.currentState, event)
+                
+                
+
             
             # Renders the UI of the current state only. If there was no distinction, all of the 
             # UI's would be rendered at once instead of the intended UI of the current state/screen.
@@ -59,14 +77,17 @@ class Game:
                 
             elif self.stateManager.currentState == 'shop':
 
-                # self.handler.render('shop') will return a string "Shop Button" if the shop button on the main menu was 
-                # clicked. This is needs to be stored and checked for the state/screen transition to the Shop state/screen.
-                actionFromUI = self.handler.render('shop')
+                
+                self.handler.render('shop')
 
             elif self.stateManager.currentState == 'character':
 
                 
-                actionFromUI = self.handler.render('character')
+                self.handler.render('character')
+
+            elif self.stateManager.currentState =='levelSelect':
+
+                self.handler.render('difficulty')
 
             
             # This checks the value of actionFromUI to see if there is need to state transition.
