@@ -1,35 +1,50 @@
 import pygame
 import sys
 from scripts.UI.UIHandler import UIHandler
+from scripts.Grid import Grid
+import pygame
+import pygame
 
-
-# Initialize pygame
 pygame.init()
+screen = pygame.display.set_mode((800, 600))
+font = pygame.font.SysFont(None, 18)
 
-# Set up the screen
-WIDTH, HEIGHT = 800, 600
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("DUNGEON DEPTHS")
+# Dummy image placeholder
+image = pygame.Surface((32, 32))
+image.fill((200, 50, 50))
 
-# Main game loop
-clock = pygame.time.Clock()
+# Create two independent grids
+grid1 = Grid(50, 50, 300, 200, 3, 4)
+grid2 = Grid(400, 100, 300, 200, 2, 3)
+
+def say_hello():
+    print("Grid 1 action")
+
+def other_action():
+    print("Grid 2 action")
+
+grid1.fill_cell(0, 0, "Play", font, say_hello)
+grid1.fill_cell_with_image(1, 2, image, say_hello)
+
+grid2.fill_cell(0, 0, "Exit", font, other_action)
+grid2.fill_cell_with_image(1, 1, image, other_action)
+
 running = True
-
-handler = UIHandler(screen)
-
 while running:
-    # Handle events
+    screen.fill((10, 10, 10))
+
+    # Draw all grids
+    grid1.draw(screen, font)
+    grid2.draw(screen, font)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
-    # Render the main menu - now just passing the screen
-    handler.render('menu')
-    
-    # Update the display
-    pygame.display.flip()
-    clock.tick(60)
 
-# Clean up
+        # Pass events to each grid
+        grid1.handle_event(event)
+        grid2.handle_event(event)
+
+    pygame.display.flip()
+
 pygame.quit()
-sys.exit()
