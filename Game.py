@@ -26,6 +26,10 @@ class Game:
         # Creating instance of UI Handler for all of the UI's in the game.
         self.handler = UIHandler(self.screen)
 
+    def switchUI(self, currentUI, nextUI):
+        self.handler.stop(currentUI)
+        self.stateManager.switchState(nextUI)
+
 
     # Runs the game loop for the entire game.
     def run(self):
@@ -46,23 +50,24 @@ class Game:
 
                         # If you are in the shop state/screen and click esc key, you return to the main menu.
                         if self.stateManager.currentState == 'shop':
-                            self.handler.stop('shop')
-                            self.stateManager.switchState('main')
+                            self.switchUI('shop', 'main')
 
                         elif self.stateManager.currentState == 'levelSelect':
-                            self.handler.stop('levelSelect')
-                            self.stateManager.switchState('character')
+                            self.switchUI('levelSelect', 'character')
 
                         elif self.stateManager.currentState == 'character':
-                            self.handler.stop('character')
-                            self.stateManager.switchState('main')
+                            self.switchUI('character', 'main')
+
                     
                     if event.key == pygame.K_RETURN:
 
                         if self.stateManager.currentState =='character':
-                            print("should be going to level select")
-                            self.handler.stop('character')
-                            self.stateManager.switchState('levelSelect')
+                            self.switchUI('character', 'levelSelect')
+                        
+                        elif self.stateManager.currentState =='levelSelect':
+                            self.switchUI('levelSelect', 'roomSelect')
+
+                            
 
                 # Handles events within the different States other than main. This is different from 
                 # actionFromUI because this handle event section does not do anything regarding state transition 
