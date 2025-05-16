@@ -29,9 +29,9 @@ class UIHandler:
                 triggered_action = Character.draw(self.screen)
                 #self.Character(screen)
             case 'difficulty':
+                LevelSelectionScreen.init(pygame.font.SysFont("Arial",72))
                 triggered_action = DifficultySelector.draw(self.screen)
             case 'room select':
-                LevelSelectionScreen.init(pygame.font.SysFont("Arial",72))
                 triggered_action = LevelSelectionScreen.draw(self.screen)
             
         return triggered_action 
