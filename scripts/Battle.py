@@ -2,10 +2,11 @@ import random
 
 from scripts.Player import Knight
 from scripts.Enemy import Skeleton
-
+from scripts.UI.battleui import BattleScreen
 
 class BattleData:
     def __init__(self):
+        BattleScreen.init()
         self.turn = [True]
         self.player = [True, False] 
         self.enemy = [True, False]

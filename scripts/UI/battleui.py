@@ -54,12 +54,19 @@ class BattleScreen:
         # Player grids (left side)
         cls.player_grids = []
         for i in range(3):
+            rows, cols = 3,3
+            if i == 0:
+                rows = 1
+                cols = 1
+            elif i > 0:
+                rows = 3
+                cols = 3
             grid = Grid(
                 cls.left_width * 0.1, 
                 start_y + i * (grid_size + grid_margin), 
                 grid_size, 
                 grid_size, 
-                3, 3
+                rows, cols
             )
             GridLogic.displayGrid(grid, GridLogic.generateGrid(), cls.font)
             cls.player_grids.append(grid)
@@ -67,12 +74,19 @@ class BattleScreen:
         # Enemy grids (right side)
         cls.enemy_grids = []
         for i in range(3):
+            rows, cols = 3,3
+            if i == 0:
+                rows = 1
+                cols = 1
+            elif i > 0:
+                rows = 3
+                cols = 3
             grid = Grid(
                 cls.screen_width - cls.right_width * 0.1 - grid_size, 
                 start_y + i * (grid_size + grid_margin), 
                 grid_size, 
                 grid_size, 
-                3, 3
+                rows, cols
             )
             GridLogic.displayGrid(grid, GridLogic.generateGrid(), cls.font)
             cls.enemy_grids.append(grid)

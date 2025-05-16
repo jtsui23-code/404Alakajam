@@ -6,6 +6,7 @@ class Room:
     running = False
     initialized = False
     frame = 0
+    selected_cell = None  # Track selected cell (row, col)
     
     # Screen dimensions
     WIDTH = 1280
@@ -17,30 +18,33 @@ class Room:
     BUTTON_COLOR = (70, 70, 90)
     BUTTON_HOVER = (100, 100, 120)
     BUTTON_TEXT = (255, 255, 255)
+    SELECTED_TEXT = (200, 200, 0)
     
-    # Font
+    # Fonts
     default_font = None
+    small_font = None
     
     # UI Elements
     room_grid = None
     play_button_rect = None
     back_button_rect = None
-    
+
     @classmethod
     def initialize(cls, screen):
         """Initialize the room screen"""
         cls.WIDTH, cls.HEIGHT = screen.get_size()
         
-        # Initialize default font
+        # Initialize fonts
         pygame.font.init()
         cls.default_font = pygame.font.SysFont('Arial', 24)
+        cls.small_font = pygame.font.SysFont('Arial', 20)
         
         # Create centered grid
         grid_width = 600
         grid_height = 400
         cls.room_grid = Grid(
             (cls.WIDTH - grid_width) // 2,
-            (cls.HEIGHT - grid_height) // 2 - 50,  # Move up to make space for buttons
+            (cls.HEIGHT - grid_height) // 2 - 50,  # Move up to make space for UI
             grid_width,
             grid_height,
             3, 3
@@ -71,6 +75,22 @@ class Room:
         cls.initialized = True
     
     @classmethod
+    def draw_selected_cell_text(cls, screen):
+        """Draw the 'Selected Cell' text below buttons"""
+        if cls.selected_cell:
+            row, col = cls.selected_cell
+            text = f"Selected Cell: {row},{col}"
+        else:
+            text = "Selected Cell: None"
+            
+        text_surface = cls.small_font.render(text, True, cls.SELECTED_TEXT)
+        text_y = cls.back_button_rect.bottom + 20
+        screen.blit(text_surface, (
+            cls.WIDTH//2 - text_surface.get_width()//2,
+            text_y
+        ))
+
+    @classmethod
     def draw_buttons(cls, screen):
         """Draw the Play and Go Back buttons"""
         # Draw Play button
@@ -100,7 +120,8 @@ class Room:
         """Handle button clicks"""
         if cls.play_button_rect.collidepoint(pos):
             print("Play button clicked")
-            # Add your play action here
+            if cls.selected_cell:
+                print(f"Playing with selected cell: {cls.selected_cell}")
             return True
             
         if cls.back_button_rect.collidepoint(pos):
@@ -144,6 +165,7 @@ class Room:
             cls.room_grid.draw(screen, cls.default_font)
             
         cls.draw_buttons(screen)
+        cls.draw_selected_cell_text(screen)
     
     @classmethod
     def update(cls, event):
@@ -162,12 +184,17 @@ class Room:
                 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left click
+                # Check buttons first
                 if cls.handle_button_click(event.pos):
                     return True
                 
-        # Pass events to grid if it exists
-        if cls.room_grid:
-            return cls.room_grid.handle_event(event)
+                # Then check grid cells
+                if cls.room_grid:
+                    cell = cls.room_grid.get_cell_at_pos(event.pos)
+                    if cell:
+                        cls.selected_cell = cell
+                        return True
+                
         return False
     
     @classmethod
@@ -176,6 +203,7 @@ class Room:
         cls.running = False
         cls.initialized = False
         cls.frame = 0
+        cls.selected_cell = None
         cls.room_grid = None
         cls.play_button_rect = None
         cls.back_button_rect = None
