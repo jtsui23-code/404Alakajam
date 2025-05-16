@@ -195,49 +195,28 @@ class DifficultySelector:
         instruction_y = cls.HEIGHT - 60
         cls.draw_text(screen, "UP/DOWN: SELECT", 18, cls.WHITE, cls.WIDTH//2 - 140, instruction_y)
         cls.draw_text(screen, "ENTER: CONFIRM", 18, cls.WHITE, cls.WIDTH//2 - 140, instruction_y + 30)
-
+    
     @classmethod
-    def update(cls, event): 
-        """Handle a single event and update state"""
+    def update(cls, event):  # Now takes a single event instead of a list
+        """Handle events and update state"""
         if not cls.initialized:
             return False
-            
-        # Directly process the single event_obj, no loop needed
+
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 cls.selected = (cls.selected - 1) % len(cls.difficulties)
-                return True  # Something changed
+                return True
             elif event.key == pygame.K_DOWN:
                 cls.selected = (cls.selected + 1) % len(cls.difficulties)
-                return True  # Something changed
+                return True
             elif event.key == pygame.K_RETURN:
                 cls.result = cls.difficulties[cls.selected]
-                # cls.running = False # This variable's purpose should be reviewed
-                                    # if DifficultySelector doesn't have its own loop.
-                return True  # Something changed
+                cls.running = False
+                return True
         
-        return False  # Nothing changed or event not relevant
-    
-    # @classmethod
-    # def update(cls, events):
-    #     """Handle events and update state"""
-    #     if not cls.initialized:
-    #         return False
-            
-    #     for event in events:
-    #         if event.type == pygame.KEYDOWN:
-    #             if event.key == pygame.K_UP:
-    #                 cls.selected = (cls.selected - 1) % len(cls.difficulties)
-    #                 return True  # Something changed
-    #             elif event.key == pygame.K_DOWN:
-    #                 cls.selected = (cls.selected + 1) % len(cls.difficulties)
-    #                 return True  # Something changed
-    #             elif event.key == pygame.K_RETURN:
-    #                 cls.result = cls.difficulties[cls.selected]
-    #                 cls.running = False
-    #                 return True  # Something changed
+        return False
         
-    #     return False  # Nothing changed
+        return False  # Nothing changed
     
     @classmethod
     def clear(cls, screen):
@@ -245,6 +224,7 @@ class DifficultySelector:
         screen.fill(cls.BLACK)
         cls.running = False
         cls.result = None
+        cls.selected = 1
     
     @classmethod
     def get_result(cls):

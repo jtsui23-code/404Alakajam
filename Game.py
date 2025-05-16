@@ -3,7 +3,7 @@ import pygame
 # import random
 from scripts.UI.UIHandler import UIHandler
 from scripts.State import StateManager
-
+from scripts.UI.difficulty import DifficultySelector
 class Game:
     def __init__(self):
         pygame.init()
@@ -33,7 +33,60 @@ class Game:
 
     # Runs the game loop for the entire game.
     def run(self):
-        while self.running: 
+        while self.running:
+            actionFromUI = None
+            
+            # Handle events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        # Handle Escape for all states
+                        if self.stateManager.currentState == 'shop':
+                            self.switchUI('shop', 'main')
+                        elif self.stateManager.currentState == 'levelSelect':
+                            self.switchUI('levelSelect', 'character')
+                        elif self.stateManager.currentState == 'character':
+                            self.switchUI('character', 'main')
+
+                    # Let DifficultySelector handle Enter in levelSelect state
+                    if self.stateManager.currentState != 'levelSelect':
+                        if event.key == pygame.K_RETURN:
+                            if self.stateManager.currentState == 'character':
+                                self.switchUI('character', 'levelSelect')
+
+                # Pass events to current UI
+                if not self.stateManager.currentState == 'main':
+                    self.handler.handleEvent(self.stateManager.currentState, event)
+
+            # Render current UI
+            if self.stateManager.currentState == 'main':
+                actionFromUI = self.handler.render('menu')
+            elif self.stateManager.currentState == 'shop':
+                self.handler.render('shop')
+            elif self.stateManager.currentState == 'character':
+                self.handler.render('character')
+            elif self.stateManager.currentState == 'levelSelect':
+                self.handler.render('difficulty')
+                # Check if difficulty was selected
+                if DifficultySelector.result is not None:
+                    print(f"Selected difficulty: {DifficultySelector.result}")
+                    self.switchUI('levelSelect', 'roomSelect')
+                    DifficultySelector.clear(self.screen)
+
+            # Handle UI actions
+            if actionFromUI:
+                if actionFromUI == "Start Button":
+                    self.handler.stop('menu')
+                    self.stateManager.switchState('character')
+                elif actionFromUI == "Shop Button":
+                    self.handler.stop('menu')
+                    self.stateManager.switchState('shop')
+
+            pygame.display.flip()
+            self.clock.tick(60) 
             
             # Checks if a button was clicked within the main menu state for state and screen transition.  
             actionFromUI = None
@@ -57,6 +110,16 @@ class Game:
 
                         elif self.stateManager.currentState == 'character':
                             self.switchUI('character', 'main')
+                        if self.stateManager.currentState != 'levelSelect':
+                            if event.key == pygame.K_RETURN:
+                                if self.stateManager.currentState == 'character':
+                                    self.switchUI('character', 'levelSelect')
+    
+                                # Check if a difficulty was selected
+                                if DifficultySelector.result is not None:
+                                    print(f"Selected difficulty: {DifficultySelector.result}")
+                                    self.switchUI('levelSelect', 'roomSelect')
+                                    DifficultySelector.clear()  
 
                     
                     if event.key == pygame.K_RETURN:
