@@ -1,10 +1,10 @@
+import pygame
 from scripts.UI.main_menu import MainMenu
 #from scripts.UI.shop import Shop
 from scripts.UI.char_select import Character
 from scripts.UI.shop import Shop
 from scripts.UI.difficulty import DifficultySelector
 from scripts.UI.level import LevelSelectionScreen
-
 
 
 
@@ -31,6 +31,7 @@ class UIHandler:
             case 'difficulty':
                 triggered_action = DifficultySelector.draw(self.screen)
             case 'room select':
+                LevelSelectionScreen.init(pygame.font.SysFont("Arial",72))
                 triggered_action = LevelSelectionScreen.draw(self.screen)
             
         return triggered_action 

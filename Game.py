@@ -75,6 +75,9 @@ class Game:
                     print(f"Selected difficulty: {DifficultySelector.result}")
                     self.switchUI('levelSelect', 'roomSelect')
                     DifficultySelector.clear(self.screen)
+                    print("It's over")
+            elif self.stateManager.currentState == 'roomSelect':
+                actionFromUI = self.handler.render('room select')
 
             # Handle UI actions
             if actionFromUI:
