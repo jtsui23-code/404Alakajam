@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Grid:
     def __init__(self, x, y, width, height, rows, cols):
@@ -84,3 +85,27 @@ class Grid:
                     cell = self.cells[row][col]
                     if cell and cell["rect"].collidepoint(pos):
                         cell["callback"]()
+
+
+class GridLogic:
+    @staticmethod
+    def generateGrid():
+        arr = [['B', 'R', 'S'],[ 'R', 'X', 'R'], ['B' , 'R', 'U']]
+        arr[0][1] = 'B' if random.randint(1,100) > 66 else 'X'
+        arr[1][0] = 'B' if random.randint(1,100) > 66 else 'X'
+        arr[1][2] = 'B' if random.randint(1,100) > 66 else 'X'
+        arr[2][1] = 'B' if random.randint(1,100) > 66 else 'X'
+
+        return arr
+    
+
+    @staticmethod
+    def displayGrid(grid, arr, font):
+        for i in range(3):
+            for j in range(3):
+                grid.fill_cell(i,j,arr[i][j],font, lambda: print("Hello"))
+
+    @staticmethod
+    def setGridCallback(grid, row, col, callback):
+        grid.cells[row][col]["callback"] = callback
+            
