@@ -48,6 +48,14 @@ class Game:
                         if self.stateManager.currentState == 'shop':
                             self.handler.stop('shop')
                             self.stateManager.switchState('main')
+
+                        elif self.stateManager.currentState == 'levelSelect':
+                            self.handler.stop('levelSelect')
+                            self.stateManager.switchState('character')
+
+                        elif self.stateManager.currentState == 'character':
+                            self.handler.stop('character')
+                            self.stateManager.switchState('main')
                     
                     if event.key == pygame.K_RETURN:
 
