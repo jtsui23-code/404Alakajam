@@ -97,6 +97,7 @@ class GridLogic:
         arr[2][1] = 'B' if random.randint(1,100) > 66 else 'X'
 
         return arr
+
     
 
     @staticmethod
