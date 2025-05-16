@@ -7,8 +7,8 @@ def main():
     pygame.display.set_caption("RPG Battle")
     clock = pygame.time.Clock()
     
-    # Create battle screen
-    battle_ui = BattleScreen(screen)
+    # Initialize battle screen (now static)
+    BattleScreen.init(screen)
     
     running = True
     while running:
@@ -17,13 +17,13 @@ def main():
                 running = False
             
             # Pass events to battle UI
-            battle_ui.handle_events(event)
+            BattleScreen.handle_events(event)
         
         # Clear screen
-        screen.fill(battle_ui.colors['background'])
+        screen.fill(BattleScreen.colors['background'])
         
         # Draw battle UI
-        battle_ui.draw()
+        BattleScreen.draw()
         
         pygame.display.flip()
         clock.tick(60)
