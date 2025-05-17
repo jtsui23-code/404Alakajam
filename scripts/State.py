@@ -26,6 +26,7 @@ class StateManager():
 
         }
 
+        self.musicManager = MusicManager()
 
         self.setAction = None
 
@@ -40,7 +41,7 @@ class StateManager():
         self.allStates[self.currentState].changeStateStatus(True)
 
         # Start the music for the main menu
-        # self.allStates[self.currentState].startMusic()
+        self.musicManager.playTheme(self.currentState, True)
 
 
 
@@ -67,7 +68,7 @@ class StateManager():
 
         # Start the music for the new state
 
-        self.allStates[self.currentState].startMusic()
+        self.musicManager.playTheme(self.currentState, True)
 
 
 # (MainMenuState, ShopState, etc.) before StateManager if you refer to them directly
