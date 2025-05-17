@@ -2,20 +2,50 @@ import random
 
 from scripts.Player import Knight
 from scripts.Enemy import Skeleton
-from scripts.UI.battleui import BattleScreen
+from scripts.Grid import GridLogic
+from scripts.UI.battleui_dynamic import BattleScreen
+
 
 class BattleData:
-    def __init__(self):
-        BattleScreen.init()
-        self.turn = [True]
-        self.player = [True, False] 
-        self.enemy = [True, False]
+    def __init__(self, screen):
+        self.screen = BattleScreen(screen)
+        self.screen.set_callback('attack', self.custom_attack)
+
+        self.player = Knight()
+        self.playerGrid = GridLogic.generateGrid()
+
+        self.enemy = Skeleton()
+        self.enemyGrid = GridLogic.generateGrid()
+ 
+
+        self.screen.set_hearts(player_hearts=self.player.hearts, enemy_hearts= self.enemy.hearts, max_hearts=(self.player.hearts,self.enemy.hearts))
+
+        self.screen.set_defeat_callback('player', lambda: self.game_over())
+        self.screen.set_defeat_callback('enemy', lambda: self. victory_sequence())
+
+        self.turn = [self.player]
 
     def getAll(self):
         return str(self.turn), str(self.you), str(self.enemy)
+    
+    def custom_attack(self):
+        self.screen.remove_hearts(enemy=1)
+        print("Enemy hit!")
+
+    def open_inventory(self):
+        print("Open")
+
+    def attempt_escape(self):
+        print("Escape")
+
+    def game_over(self):
+        print("Game Over")
+    
+    def victory_sequence(self):
+        print("You Won!")
 
 
-
+"""
 class GridLogic:
     def __init__(self):
         self.grid = ['B', 'R', 'S', 'R', 'X', 'R', 'B' , 'R', 'U']
@@ -55,7 +85,8 @@ class GridLogic:
             case 'S':
                 print("Someone used your special attack")
 
-
+"""
+"""
 playerGrid = GridLogic()
 enemyGrid = GridLogic()
 battle =  BattleData()
@@ -66,7 +97,9 @@ print(playerGrid.grid)
 print(enemyGrid.grid)
 
 #print(battle.getAll())
+"""
 
+"""
 while True:
     chosen = input("Attack! Press any key to continue: ")
     print("Player is performing.")
@@ -78,3 +111,4 @@ while True:
     enemyGrid.output()
 
     print('---------------------------------------------')
+"""
