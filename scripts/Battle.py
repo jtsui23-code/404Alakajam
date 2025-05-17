@@ -44,6 +44,11 @@ class BattleData:
     def victory_sequence(self):
         print("You Won!")
 
+"""
+Ignore everything past here. Old code
+"""
+
+
 
 """
 class GridLogic:
