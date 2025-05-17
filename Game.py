@@ -52,7 +52,7 @@ class Game:
             # Checks if a button was clicked within the main menu state for state and screen transition.  
             actionFromUI = None
 
-            print(f"The current state is ", {self.stateManager.currentState})
+            # print(f"The current state is ", {self.stateManager.currentState})
 
             # Handle events
             for event in pygame.event.get():
