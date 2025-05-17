@@ -30,6 +30,8 @@ class BattleData:
     
     def custom_attack(self):
         self.screen.remove_hearts(enemy=1)
+        cell = GridLogic.chooseCell(self.playerGrid)
+        print(cell)
         print("Enemy hit!")
 
     def open_inventory(self):

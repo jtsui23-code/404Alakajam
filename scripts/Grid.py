@@ -97,7 +97,12 @@ class GridLogic:
         arr[2][1] = 'B' if random.randint(1,100) > 66 else 'X'
 
         return arr
-
+    
+    @staticmethod
+    def chooseCell(grid):
+        row = random.randint(0,2)
+        col = random.randint(0,2)
+        return grid[row][col]
     
 
     @staticmethod
