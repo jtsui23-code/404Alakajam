@@ -6,6 +6,7 @@ from scripts.UI.shop import Shop
 from scripts.UI.difficulty import DifficultySelector
 from scripts.UI.level import LevelSelectionScreen
 
+from scripts.UI.battleui import BattleScreen
 
 
 
@@ -33,6 +34,9 @@ class UIHandler:
                 triggered_action = DifficultySelector.draw(self.screen)
             case 'roomSelect':
                 triggered_action = LevelSelectionScreen.draw(self.screen)
+            
+            case 'battle':
+                triggered_action = BattleScreen.draw(self.screen)
             
         return triggered_action 
 

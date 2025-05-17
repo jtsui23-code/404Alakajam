@@ -91,7 +91,12 @@ class Game:
                 # just the events self contained in the current State of the game.
                 if not self.stateManager.currentState == 'main':
                     self.handler.handleEvent(self.stateManager.currentState, event)
-                
+                    
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if self.stateManager.currentState == 'roomSelect':
+                        self.switchUI('roomSelect', 'battle')
+                 
                 
 
             
@@ -134,6 +139,10 @@ class Game:
             elif self.stateManager.currentState =='roomSelect':
 
                 self.handler.render('roomSelect')
+            
+            elif self.stateManager.currentState == 'battle':
+
+                self.handler.render('battle')
 
 
             
