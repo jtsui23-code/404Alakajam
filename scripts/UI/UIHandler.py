@@ -66,10 +66,16 @@ class UIHandler:
             case 'character':
                 Character.stop()
 
-    def checkIfWon(self):
-        self.battleData.victory_sequence()
+    
+    def checkOutCome(self):
+        outcome = self.battleData.screen.get_outcome()
+        print(outcome)
 
-    def checkIfLost(self):
-        self.battleData.game_over()
+        if outcome == 'player':
+            return 'lost'
+        elif outcome == 'enemy':
+            return 'won'
+        else:
+            return 'battling'
 
     
