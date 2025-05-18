@@ -7,6 +7,7 @@ from scripts.UI.difficulty import DifficultySelector
 from scripts.UI.level import LevelSelectionScreen
 
 
+from scripts.Battle import BattleData
 
 
 
@@ -14,6 +15,7 @@ class UIHandler:
     def __init__(self, screen):
         self.screen = screen
         
+        self.battleData = BattleData(self.screen)        
        # self.Shop = Shop()
        # self.Character = Character()
 
@@ -35,7 +37,8 @@ class UIHandler:
                 triggered_action = LevelSelectionScreen.draw(self.screen)
             
             case 'battle':
-                triggered_action = BattleScreen.draw(self.screen)
+
+                triggered_action = self.battleData.screen.draw()
             
         return triggered_action 
 
@@ -53,6 +56,8 @@ class UIHandler:
             case 'roomSelect':
                 LevelSelectionScreen.handle_event(event)
 
+            case 'battle':
+                self.battleData.screen.handle_events(event)
 
     def stop(self, atr):
         match atr:
