@@ -164,6 +164,9 @@ class Game:
                 # elif actionFromUI == "Load Button":
                 #     self.handler.stop('menu')
                 #     self.stateManager.switchState('character')
+            
+            if self.stateManager.currentState == 'battle':
+                self.handler.checkIfWon()
 
 
 
