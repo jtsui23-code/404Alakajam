@@ -166,7 +166,12 @@ class Game:
                 #     self.stateManager.switchState('character')
             
             if self.stateManager.currentState == 'battle':
-                self.handler.checkIfWon()
+                result = self.handler.checkOutCome()
+                if result == 'lost':
+                    self.switchUI('battle', 'main')
+                elif result == 'won':
+                    self.switchUI('battle', 'roomSelect')
+              
 
 
 
