@@ -21,6 +21,15 @@ def main():
         
         # Clear screen
         screen.fill(battle.screen.colors['background'])
+
+        outcome = battle.screen.get_outcome()
+        
+        if outcome == 'player':
+            print("Game Over! You lost!")
+            running = False
+        elif outcome == 'enemy':
+            print("Victory! Enemy defeated!")
+            running = False
         
         # Draw battle UI
         battle.screen.draw()
