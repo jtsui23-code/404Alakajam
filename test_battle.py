@@ -22,14 +22,15 @@ def main():
         # Clear screen
         screen.fill(battle.screen.colors['background'])
 
-        outcome = battle.screen.get_outcome()
+        outcome = battle.checkWin()
         
-        if outcome == 'player':
+        if outcome == 'enemy won':
             print("Game Over! You lost!")
             running = False
-        elif outcome == 'enemy':
+        elif outcome == 'player won':
             print("Victory! Enemy defeated!")
             running = False
+        
         
         # Draw battle UI
         battle.screen.draw()

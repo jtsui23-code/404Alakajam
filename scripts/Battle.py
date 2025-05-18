@@ -8,6 +8,7 @@ from scripts.UI.battleui_dynamic import BattleScreen
 
 class BattleData:
     def __init__(self, screen):
+        self.done = False
         self.screen = BattleScreen(screen)
         self.screen.set_callback('attack', self.custom_attack)
 
@@ -41,9 +42,14 @@ class BattleData:
         print("Escape")
 
     def game_over(self):
+        self.done = 'enemy won'
         print("Game Over")
+
+    def checkWin(self):
+        return self.done
     
     def victory_sequence(self):
+        self.done = 'player won'
         print("You Won!")
 
 """

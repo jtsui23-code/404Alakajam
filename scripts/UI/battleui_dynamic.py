@@ -11,7 +11,6 @@ class BattleScreen:
     - Heart-based health display
     - Fully configurable button callbacks
     - Methods for heart management
-    - Tracks battle outcome (who lost)
     """
     
     def __init__(self, screen):
@@ -41,9 +40,6 @@ class BattleScreen:
         self.enemy_hearts = 3
         self.max_enemy_hearts = 3
         
-        # Battle outcome tracking
-        self.battle_outcome = None  # None = ongoing, 'player' = player lost, 'enemy' = enemy lost
-        
         # Initialize UI components
         self.player_grids = self._create_grids(left=True)
         self.enemy_grids = self._create_grids(left=False)
@@ -54,32 +50,9 @@ class BattleScreen:
             'attack': lambda: print("Attack pressed"),
             'bag': lambda: print("Bag pressed"),
             'run': lambda: print("Run pressed"),
-            'player_defeated': lambda: self._set_outcome('player'),
-            'enemy_defeated': lambda: self._set_outcome('enemy')
+            'player_defeated': lambda: print("Player was defeated!"),
+            'enemy_defeated': lambda: print("Enemy was defeated!")
         }
-
-    def _set_outcome(self, loser):
-        """Internal method to set the battle outcome.
-        
-        Args:
-            loser (str): 'player' or 'enemy' indicating who lost
-        """
-        self.battle_outcome = loser
-        print(f"Battle over! {loser.capitalize()} was defeated!")
-
-    def get_outcome(self):
-        """Get the current battle outcome.
-        
-        Returns:
-            str: None if battle ongoing, 'player' if player lost, 'enemy' if enemy lost
-        """
-        return self.battle_outcome
-
-    def reset_battle(self):
-        """Reset the battle state for a new battle."""
-        self.player_hearts = self.max_player_hearts
-        self.enemy_hearts = self.max_enemy_hearts
-        self.battle_outcome = None
 
     # Grid Creation ------------------------------------------------------------
     def _create_grids(self, left):
@@ -187,27 +160,6 @@ class BattleScreen:
         # Check for defeat conditions after removing hearts
         self._check_heart_depletion()
 
-    def _check_heart_depletion(self):
-        """Check if either party has run out of hearts and trigger callbacks."""
-        if self.player_hearts <= 0 and self.battle_outcome is None:
-            self.callbacks['player_defeated']()
-        if self.enemy_hearts <= 0 and self.battle_outcome is None:
-            self.callbacks['enemy_defeated']()
-
-    def set_defeat_callback(self, target, callback):
-        """Set a callback for when a target runs out of hearts.
-        
-        Args:
-            target (str): 'player' or 'enemy'
-            callback (function): Function to call when target is defeated
-        """
-        if target == 'player':
-            self.callbacks['player_defeated'] = callback
-        elif target == 'enemy':
-            self.callbacks['enemy_defeated'] = callback
-        else:
-            raise ValueError("Target must be either 'player' or 'enemy'")
-
     # Drawing Methods ---------------------------------------------------------
     def draw_hearts(self, count, max_count, left=True):
         """Draw heart indicators showing current/max health.
@@ -224,6 +176,28 @@ class BattleScreen:
             x = start_x + i * spacing
             color = self.colors['heart'] if i < count else self.colors['empty_heart']
             pygame.draw.circle(self.screen, color, (x, 40), radius)
+    
+    def _check_heart_depletion(self):
+        """Check if either party has run out of hearts and trigger callbacks."""
+        if self.player_hearts <= 0:
+            self.callbacks['player_defeated']()
+        if self.enemy_hearts <= 0:
+            self.callbacks['enemy_defeated']()
+    
+    def set_defeat_callback(self, target, callback):
+        """Set a callback for when a target runs out of hearts.
+        
+        Args:
+            target (str): 'player' or 'enemy'
+            callback (function): Function to call when target is defeated
+        """
+        if target == 'player':
+            self.callbacks['player_defeated'] = callback
+        elif target == 'enemy':
+            self.callbacks['enemy_defeated'] = callback
+        else:
+            raise ValueError("Target must be either 'player' or 'enemy'")
+
 
     # Event Handling ----------------------------------------------------------
     def handle_events(self, event):
