@@ -24,10 +24,10 @@ def main():
 
         outcome = battle.checkWin()
         
-        if outcome == 'enemy won':
+        if outcome == 'enemy':
             print("Game Over! You lost!")
             running = False
-        elif outcome == 'player won':
+        elif outcome == 'player':
             print("Victory! Enemy defeated!")
             running = False
         

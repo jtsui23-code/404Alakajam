@@ -42,14 +42,14 @@ class BattleData:
         print("Escape")
 
     def game_over(self):
-        self.done = 'enemy won'
+        self.done = 'enemy'
         print("Game Over")
 
     def checkWin(self):
         return self.done
     
     def victory_sequence(self):
-        self.done = 'player won'
+        self.done = 'player'
         print("You Won!")
 
 """
