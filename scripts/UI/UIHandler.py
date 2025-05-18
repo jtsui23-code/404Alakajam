@@ -66,4 +66,10 @@ class UIHandler:
             case 'character':
                 Character.stop()
 
+    def checkIfWon(self):
+        self.battleData.victory_sequence()
+
+    def checkIfLost(self):
+        self.battleData.game_over()
+
     
