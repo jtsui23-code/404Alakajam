@@ -48,7 +48,8 @@ class Game:
 
             pygame.display.flip()
             self.clock.tick(60) 
-            
+
+            self.screen.fill((0,0,0)) 
             # Checks if a button was clicked within the main menu state for state and screen transition.  
             actionFromUI = None
 
@@ -95,6 +96,7 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.stateManager.currentState == 'roomSelect':
+                        self.handler.resetBattleScreen()
                         self.switchUI('roomSelect', 'battle')
                  
                 

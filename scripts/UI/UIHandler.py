@@ -19,6 +19,9 @@ class UIHandler:
        # self.Shop = Shop()
        # self.Character = Character()
 
+    def resetBattleScreen(self):
+        self.battleData = BattleData(self.screen)   
+
     
     def render(self,atr):
         match atr:
@@ -68,13 +71,13 @@ class UIHandler:
 
     
     def checkOutCome(self):
-        outcome = self.battleData.screen.get_outcome()
+        outcome = self.battleData.checkWin()
         print(outcome)
 
         if outcome == 'player':
-            return 'lost'
-        elif outcome == 'enemy':
             return 'won'
+        elif outcome == 'enemy':
+            return 'lost'
         else:
             return 'battling'
 

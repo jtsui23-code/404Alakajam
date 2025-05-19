@@ -30,6 +30,7 @@ class BattleData:
         return str(self.turn), str(self.you), str(self.enemy)
     
     def custom_attack(self):
+        self.screen.remove_hearts(player=1)
         self.screen.remove_hearts(enemy=1)
         cell = GridLogic.chooseCell(self.playerGrid)
         print(cell)
@@ -46,8 +47,13 @@ class BattleData:
         print("Game Over")
 
     def checkWin(self):
-        return self.done
-    
+
+        # Needs to return temp because the self.done has to be reseted or the 
+        # next battle will instantly end.
+        temp = self.done
+        self.done = 'None'
+        return temp
+     
     def victory_sequence(self):
         self.done = 'player'
         print("You Won!")
