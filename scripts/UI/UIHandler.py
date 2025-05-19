@@ -19,6 +19,9 @@ class UIHandler:
        # self.Shop = Shop()
        # self.Character = Character()
 
+    def resetBattleScreen(self):
+        self.battleData = BattleData(self.screen)   
+
     
     def render(self,atr):
         match atr:

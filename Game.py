@@ -96,6 +96,7 @@ class Game:
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.stateManager.currentState == 'roomSelect':
+                        self.handler.resetBattleScreen()
                         self.switchUI('roomSelect', 'battle')
                  
                 
