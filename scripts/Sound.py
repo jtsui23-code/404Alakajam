@@ -30,7 +30,7 @@ class MusicManager(object):
                 return
 
             # Check if the requested song and loop status are already active
-            if self.songName == songName and self.is_looping == loop and pygame.mixer.music.get_busy():
+            if self.songName == songName and self.loop == loop and pygame.mixer.music.get_busy():
                 print(f"Song '{songName}' is already playing with the same loop status.")
                 return # Or restart if that's desired behavior for calling the same song
 

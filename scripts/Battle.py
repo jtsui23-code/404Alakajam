@@ -46,8 +46,10 @@ class BattleData:
         print("Game Over")
 
     def checkWin(self):
-        return self.done
-    
+        temp = self.done
+        self.done = 'None'
+        return temp
+     
     def victory_sequence(self):
         self.done = 'player'
         print("You Won!")

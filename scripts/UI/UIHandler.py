@@ -68,13 +68,13 @@ class UIHandler:
 
     
     def checkOutCome(self):
-        outcome = self.battleData.screen.get_outcome()
+        outcome = self.battleData.checkWin()
         print(outcome)
 
         if outcome == 'player':
-            return 'lost'
-        elif outcome == 'enemy':
             return 'won'
+        elif outcome == 'enemy':
+            return 'lost'
         else:
             return 'battling'
 
