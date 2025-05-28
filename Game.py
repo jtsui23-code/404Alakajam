@@ -150,7 +150,7 @@ class Game:
             
             # This checks the value of actionFromUI to see if there is need to state transition.
             if actionFromUI:
-                print(f"value of actionFromUI is ", {actionFromUI})
+                # print(f"value of actionFromUI is ", {actionFromUI})
 
                 # If the Start Button was clicked, go from the main menu to the character select state/screen.
                 if actionFromUI == "Start Button":
@@ -174,8 +174,6 @@ class Game:
                 elif result == 'won':
                     self.switchUI('battle', 'roomSelect')
               
-
-
 
 
             # Updates the display

@@ -30,11 +30,43 @@ class BattleData:
         return str(self.turn), str(self.you), str(self.enemy)
     
     def custom_attack(self):
-        self.screen.remove_hearts(player=1)
-        self.screen.remove_hearts(enemy=1)
-        cell = GridLogic.chooseCell(self.playerGrid)
-        print(cell)
-        print("Enemy hit!")
+        playerCell = GridLogic.chooseCell(self.playerGrid)
+        enemyCell = GridLogic.chooseCell(self.enemyGrid)
+        print('-----------------------------------------------------------------------------')
+        if playerCell == 'B':
+            print("Player did basic hit ")
+            self.screen.remove_hearts(enemy=1)
+        elif playerCell == 'S':
+            print('Player did special attack')
+            self.screen.remove_hearts(enemy=1)
+
+        elif playerCell == 'U':
+            print('Player did upgraded attack')
+            self.screen.remove_hearts(enemy=1)
+        elif playerCell == 'X':
+            print('Player missed')
+
+
+        if enemyCell == 'B':
+            print("Enemy did basic hit ")
+            self.screen.remove_hearts(player=1)
+        elif enemyCell == 'S':
+            print('Enemy did special attack')
+            self.screen.remove_hearts(player=1)
+
+        elif enemyCell == 'U':
+            print('Enemy did upgraded attack')
+            self.screen.remove_hearts(player=1)
+        elif enemyCell == 'X':
+            print('Enemy missed')
+
+        print('-----------------------------------------------------------------------------\n\n')
+
+        
+
+
+        # print(cell)
+        # print("Enemy hit!")
 
     def open_inventory(self):
         print("Open")
