@@ -72,7 +72,7 @@ class UIHandler:
     
     def checkOutCome(self):
         outcome = self.battleData.checkWin()
-        print(outcome)
+        # print(outcome)
 
         if outcome == 'player':
             return 'won'
