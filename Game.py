@@ -176,8 +176,6 @@ class Game:
               
 
 
-
-
             # Updates the display
             pygame.display.flip()
             # Sets FPS to 60
