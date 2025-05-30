@@ -1,5 +1,6 @@
 import pygame
 import pygame.font
+import os
 from scripts.Grid import Grid, GridLogic
 
 class BattleScreen:
@@ -69,10 +70,31 @@ class BattleScreen:
         start_x = self.width * 0.1 if left else self.width * 0.9 - grid_size
         
         for i in range(3):
-            rows, cols = (1, 1) if i == 0 else (3, 3)
+            if i == 0:
+                rows, cols = (1, 1)
+            else:
+                rows, cols = (3, 3)
+
             y = 100 + i * (grid_size + 20)
             grid = Grid(start_x, y, grid_size, grid_size, rows, cols)
-            GridLogic.displayGrid(grid, GridLogic.generateGrid(), self.font)
+            
+            # Fixed: Only add skeleton image for the enemy side (right side) and only for the first grid
+            if i == 0 and not left:  # Enemy side, first grid
+                try:
+                    skeletonImg = pygame.image.load('Media/enemy/Slime.png').convert_alpha()
+                    # Fixed: Use 0, 0 for a 1x1 grid (not rows, cols which are the dimensions)
+                    grid.fill_cell_with_image(0, 0, skeletonImg, lambda: print("Skeleton clicked"))
+                except pygame.error as e:
+                    print(f"Could not load skeleton image: {e}")
+                    # Fallback to text if image fails to load
+                    grid.fill_cell(0, 0, "SKEL", self.font, lambda: print("Skeleton clicked"))
+            elif i == 0 and left:  # Player side, first grid
+                # You might want to add a player image here
+                grid.fill_cell(0, 0, "HERO", self.font, lambda: print("Hero clicked"))
+            else:
+                # For the 3x3 grids (i == 1 or i == 2)
+                GridLogic.displayGrid(grid, GridLogic.generateGrid(), self.font)
+            
             grids.append(grid)
         return grids
 
