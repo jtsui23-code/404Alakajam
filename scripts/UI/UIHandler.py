@@ -5,6 +5,9 @@ from scripts.UI.char_select import Character
 from scripts.UI.shop import Shop
 from scripts.UI.difficulty import DifficultySelector
 from scripts.UI.level import LevelSelectionScreen
+from scripts.UI.room import Room
+
+
 
 
 from scripts.Battle import BattleData
@@ -36,9 +39,14 @@ class UIHandler:
             case 'difficulty':
                 LevelSelectionScreen.init(pygame.font.SysFont("Arial",72))
                 triggered_action = DifficultySelector.draw(self.screen)
+                
             case 'roomSelect':
                 triggered_action = LevelSelectionScreen.draw(self.screen)
             
+            case 'roomRolling':
+
+                triggered_action = Room.draw(self.screen)
+
             case 'battle':
 
                 triggered_action = self.battleData.screen.draw()

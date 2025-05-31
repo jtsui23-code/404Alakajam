@@ -98,6 +98,10 @@ class Game:
                     if self.stateManager.currentState == 'roomSelect':
                         self.handler.resetBattleScreen()
                         self.switchUI('roomSelect', 'battle')
+
+                    # if self.stateManager.currentState == 'roomRolling':
+                    #     self.handler.resetBattleScreen()
+                    #     self.switchUI('roomRolling', 'battle')
                  
                 
 

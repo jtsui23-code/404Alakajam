@@ -1,6 +1,24 @@
 import pygame
 import random
 
+ENEMY_TYPES = {
+    "Slime": "Media/enemy/Slime.png",
+    "Ghost": "Media/enemy/Ghost.png",
+    "Zombie": "Media/enemy/Zombie.png",
+    "Skeleton": "Media/enemy/Skeleton.png",
+    "bat": "Media/enemy/Bat.png",
+
+
+}
+
+REWARDS = {
+    "coin": "Media/reward/coin.png",
+    "chest": "Media/reward/chest.png"
+}
+
+ENEMY_NAMES = list(ENEMY_TYPES.keys())
+
+
 class Grid:
     def __init__(self, x, y, width, height, rows, cols):
         self.x = x
@@ -114,7 +132,7 @@ class Grid:
                         img = pygame.transform.scale(cell["image"], cell["rect"].size)
                         surface.blit(img, cell["rect"].topleft)
                     elif cell["text"]:
-                        text_surf = font.render(cell["text"], True, text_color)
+                        text_surf = font.render(str(cell["text"]), True, text_color)
                         text_rect = text_surf.get_rect(center=cell["rect"].center)
                         surface.blit(text_surf, text_rect)
 
@@ -148,6 +166,28 @@ class GridLogic:
         # Convert back to 3x3 grid
         randomized_grid = [flat_grid[i:i + 3] for i in range(0, 9, 3)]
         return randomized_grid
+    
+    @staticmethod
+    def generateEncounterGrid(rows=3, cols=3):
+        # Random encounters: enemy, coin, or chest
+        grid = []
+        for _ in range(rows):
+            row = []
+            for _ in range(cols):
+                encounter_type = random.choices(
+                    ["enemy", "coin", "chest"],
+                    weights=[0.6, 0.25, 0.15]
+                )[0]
+
+                if encounter_type == "enemy":
+                    name = random.choice(ENEMY_NAMES)
+                    row.append({"type": "enemy", "name": name})
+                elif encounter_type == "coin":
+                    row.append({"type": "coin", "value": random.choice([10, 25, 50])})
+                elif encounter_type == "chest":
+                    row.append({"type": "chest"})
+            grid.append(row)
+        return grid
 
    
     @staticmethod
@@ -160,7 +200,23 @@ class GridLogic:
     def displayGrid(grid, arr, font):
         for i in range(3):
             for j in range(3):
-                grid.fill_cell(i,j,arr[i][j],font, lambda r=i, c=j: grid.set_selected_cell(r, c))
+                cell = arr[i][j]
+                if isinstance(cell, str):  # For plain letter like 'B', 'R', 'X'
+                    grid.fill_cell(i, j, cell, font, lambda r=i, c=j: grid.set_selected_cell(r, c))
+                elif isinstance(cell, dict):  # For encounter cells
+                    if cell["type"] == "enemy":
+                        enemy_name = cell["name"]
+                        image_path = ENEMY_TYPES.get(enemy_name)
+                        if image_path:
+                            image_surface = pygame.image.load(image_path).convert_alpha()
+                            grid.fill_cell_with_image(i, j, image_surface, lambda r=i, c=j: grid.set_selected_cell(r, c))
+                    elif cell["type"] == "coin":
+                        image_surface = pygame.image.load(REWARDS["coin"]).convert_alpha()
+                        grid.fill_cell_with_image(i, j, image_surface, lambda r=i, c=j: grid.set_selected_cell(r, c))
+                    elif cell["type"] == "chest":
+                        image_surface = pygame.image.load(REWARDS["chest"]).convert_alpha()
+                        grid.fill_cell_with_image(i, j, image_surface, lambda r=i, c=j: grid.set_selected_cell(r, c))
+
 
     @staticmethod
     def setGridCallback(grid, row, col, callback):
