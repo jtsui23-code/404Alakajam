@@ -95,6 +95,7 @@ class BattleData:
         self.done = 'player'
         print("You Won!")
 
+
     def clear_selections(self):
         """Clear all grid selections - useful for resetting between turns"""
         self.screen.clear_all_selections()
