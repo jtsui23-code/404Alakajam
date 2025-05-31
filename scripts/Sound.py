@@ -4,13 +4,12 @@ class MusicManager(object):
     def __init__(self):
         self.songs = {
             'main': 'Media/sound/Shop.wav',
-            'battle': 'Media/sound/Battle.wav',
-            'BattleTheme2': 'Media/sound/Shop.wav', 
-            'BattleTheme3': 'Media/sound/Shop.wav',
+            'battle': 'Media/sound/Skeleton.wav',
+            'BattleTheme2': 'Media/sound/Slime.wav', 
+            'BattleTheme3': 'Media/sound/Ghost.wav',
             'BattleTheme4': 'Media/sound/Shop.wav',
             'BattleTheme5': 'Media/sound/Shop.wav',
-            'BossTheme1': 'Media/sound/Shop.wav',
-            'BossTheme2': 'Media/sound/Shop.wav',
+            'BossTheme': 'Media/sound/Boss.wav',
             'roomSelect': 'Media/sound/Shop.wav',
             'roomRolling': 'Media/sound/Shop.wav',
             'gameOver': 'Media/sound/Shop.wav',
