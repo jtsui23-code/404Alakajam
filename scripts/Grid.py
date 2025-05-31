@@ -12,6 +12,10 @@ class Grid:
         self.cell_width = width // cols
         self.cell_height = height // rows
         self.cells = [[None for _ in range(cols)] for _ in range(rows)]
+        
+        # Add selection tracking
+        self.selected_cell = None  # Will store (row, col) of selected cell
+        self.glow_animation_time = 0  # For animated glow effect
 
     def fill_cell(self, row, col, text, font, callback):
         if 0 <= row < self.rows and 0 <= col < self.cols:
@@ -43,6 +47,18 @@ class Grid:
                 "callback": callback
             }
 
+    def set_selected_cell(self, row, col):
+        """Set which cell is currently selected"""
+        self.selected_cell = (row, col)
+
+    def clear_selection(self):
+        """Clear the current selection"""
+        self.selected_cell = None
+
+    def update_glow_animation(self, dt):
+        """Update the glow animation timer"""
+        self.glow_animation_time += dt
+
     def draw(self, surface, font):
         mouse_pos = pygame.mouse.get_pos()
         dungeon_color = (30, 30, 30)
@@ -50,6 +66,11 @@ class Grid:
         hover_color = (90, 0, 0)
         button_color = (60, 0, 0)
         text_color = (220, 220, 220)
+        
+        # Selection glow colors
+        glow_base_color = (255, 215, 0)  # Gold color
+        glow_intensity = abs(pygame.math.Vector2(1, 0).rotate(self.glow_animation_time * 180).x)
+        glow_alpha = int(128 + 100 * glow_intensity)  # Animate between 128-228
 
         for row in range(self.rows):
             for col in range(self.cols):
@@ -65,9 +86,29 @@ class Grid:
                 cell = self.cells[row][col]
                 if cell:
                     is_hover = cell["rect"].collidepoint(mouse_pos)
+                    is_selected = self.selected_cell == (row, col)
+                    
                     color = hover_color if is_hover else button_color
                     pygame.draw.rect(surface, color, cell["rect"])
                     pygame.draw.rect(surface, border_color, cell["rect"], 2)
+
+                    # Draw selection glow effect
+                    if is_selected:
+                        # Create multiple glow layers for better effect
+                        glow_rect = cell["rect"].inflate(8, 8)
+                        
+                        # Outer glow (thicker, more transparent)
+                        glow_surface = pygame.Surface((glow_rect.width, glow_rect.height), pygame.SRCALPHA)
+                        glow_color_outer = (*glow_base_color, max(50, glow_alpha // 3))
+                        pygame.draw.rect(glow_surface, glow_color_outer, glow_surface.get_rect(), 4)
+                        surface.blit(glow_surface, glow_rect.topleft)
+                        
+                        # Inner glow (thinner, more opaque)
+                        glow_rect_inner = cell["rect"].inflate(4, 4)
+                        glow_surface_inner = pygame.Surface((glow_rect_inner.width, glow_rect_inner.height), pygame.SRCALPHA)
+                        glow_color_inner = (*glow_base_color, min(255, glow_alpha))
+                        pygame.draw.rect(glow_surface_inner, glow_color_inner, glow_surface_inner.get_rect(), 3)
+                        surface.blit(glow_surface_inner, glow_rect_inner.topleft)
 
                     if cell["image"]:
                         img = pygame.transform.scale(cell["image"], cell["rect"].size)
@@ -84,6 +125,8 @@ class Grid:
                 for col in range(self.cols):
                     cell = self.cells[row][col]
                     if cell and cell["rect"].collidepoint(pos):
+                        # Set this cell as selected when clicked
+                        self.set_selected_cell(row, col)
                         cell["callback"]()
 
 
@@ -97,21 +140,19 @@ class GridLogic:
         arr[2][1] = 'B' if random.randint(1,100) > 66 else 'X'
 
         return arr
-    
+   
     @staticmethod
     def chooseCell(grid):
         row = random.randint(0,2)
         col = random.randint(0,2)
         return grid[row][col]
-    
-
+   
     @staticmethod
     def displayGrid(grid, arr, font):
         for i in range(3):
             for j in range(3):
-                grid.fill_cell(i,j,arr[i][j],font, lambda: print("Hello"))
+                grid.fill_cell(i,j,arr[i][j],font, lambda r=i, c=j: grid.set_selected_cell(r, c))
 
     @staticmethod
     def setGridCallback(grid, row, col, callback):
         grid.cells[row][col]["callback"] = callback
-            

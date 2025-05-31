@@ -1,10 +1,8 @@
 import random
-
 from scripts.Player import Knight
 from scripts.Enemy import Skeleton
 from scripts.Grid import GridLogic
 from scripts.UI.battleui_dynamic import BattleScreen
-
 
 class BattleData:
     def __init__(self, screen):
@@ -17,43 +15,57 @@ class BattleData:
 
         self.enemy = Skeleton()
         self.enemyGrid = GridLogic.generateGrid()
- 
 
-        self.screen.set_hearts(player_hearts=self.player.hearts, enemy_hearts= self.enemy.hearts, max_hearts=(self.player.hearts,self.enemy.hearts))
+        self.screen.set_hearts(player_hearts=self.player.hearts, enemy_hearts=self.enemy.hearts, max_hearts=(self.player.hearts, self.enemy.hearts))
 
         self.screen.set_defeat_callback('player', lambda: self.game_over())
-        self.screen.set_defeat_callback('enemy', lambda: self. victory_sequence())
+        self.screen.set_defeat_callback('enemy', lambda: self.victory_sequence())
 
         self.turn = [self.player]
 
     def getAll(self):
-        return str(self.turn), str(self.you), str(self.enemy)
-    
+        return str(self.turn), str(self.player), str(self.enemy)
+   
     def custom_attack(self):
-        playerCell = GridLogic.chooseCell(self.playerGrid)
-        enemyCell = GridLogic.chooseCell(self.enemyGrid)
+        # Choose cells randomly for demonstration
+        player_row, player_col = random.randint(0, 2), random.randint(0, 2)
+        enemy_row, enemy_col = random.randint(0, 2), random.randint(0, 2)
+        
+        # Get the cell values
+        playerCell = self.playerGrid[player_row][player_col]
+        enemyCell = self.enemyGrid[enemy_row][enemy_col]
+        
+        # Show which cells were selected by highlighting them
+        # Player grids: index 0 (1x1 hero), index 1 (3x3), index 2 (3x3)
+        # Enemy grids: index 0 (1x1 enemy), index 1 (3x3), index 2 (3x3)
+        # Use index 1 for player (left side) and index 1 for enemy (right side)
+        self.screen.set_selected_cell(1, player_row, player_col, is_player=True)   # Player's 3x3 grid
+        self.screen.set_selected_cell(1, enemy_row, enemy_col, is_player=False)    # Enemy's 3x3 grid
+        
         print('-----------------------------------------------------------------------------')
+        print(f"Player selected cell ({player_row}, {player_col}): {playerCell}")
+        print(f"Enemy selected cell ({enemy_row}, {enemy_col}): {enemyCell}")
+        
+        # Player's turn
         if playerCell == 'B':
             print("Player did basic hit ")
             self.screen.remove_hearts(enemy=1)
         elif playerCell == 'S':
             print('Player did special attack')
             self.screen.remove_hearts(enemy=1)
-
         elif playerCell == 'U':
             print('Player did upgraded attack')
             self.screen.remove_hearts(enemy=1)
         elif playerCell == 'X':
             print('Player missed')
 
-
+        # Enemy's turn
         if enemyCell == 'B':
             print("Enemy did basic hit ")
             self.screen.remove_hearts(player=1)
         elif enemyCell == 'S':
             print('Enemy did special attack')
             self.screen.remove_hearts(player=1)
-
         elif enemyCell == 'U':
             print('Enemy did upgraded attack')
             self.screen.remove_hearts(player=1)
@@ -61,12 +73,6 @@ class BattleData:
             print('Enemy missed')
 
         print('-----------------------------------------------------------------------------\n\n')
-
-        
-
-
-        # print(cell)
-        # print("Enemy hit!")
 
     def open_inventory(self):
         print("Open")
@@ -79,8 +85,7 @@ class BattleData:
         print("Game Over")
 
     def checkWin(self):
-
-        # Needs to return temp because the self.done has to be reseted or the 
+        # Needs to return temp because the self.done has to be reset or the
         # next battle will instantly end.
         temp = self.done
         self.done = 'None'
@@ -90,76 +95,12 @@ class BattleData:
         self.done = 'player'
         print("You Won!")
 
-"""
-Ignore everything past here. Old code
-"""
+    def clear_selections(self):
+        """Clear all grid selections - useful for resetting between turns"""
+        self.screen.clear_all_selections()
 
-
-
-"""
-class GridLogic:
-    def __init__(self):
-        self.grid = ['B', 'R', 'S', 'R', 'X', 'R', 'B' , 'R', 'U']
-        self.chosenCell = 0
-
-        self.randomizeGrid()
-
-    def randomizeGrid(self):
-        self.grid[1] = self.Odds()
-        self.grid[3] = self.Odds()
-        self.grid[5] = self.Odds()
-        self.grid[7] = self.Odds()
-
-    def Odds(self):
-        odds = random.randint(1,100)
-        if odds > 66:
-            return 'B'
-        else:
-            return 'X'
-        
-    def BasicAttack(self):
-        odds = random.randint(1,5)
-        print(f"Someone chose basic attack!! Your damage is ", {odds})
-
-        
-    def output(self):
-        print("Attack is underway!")
-        self.chosenCell = random.randint(0,8)
-        match self.grid[self.chosenCell]:
-            case 'X':
-                print("Someone did nothing!")
-            case 'B':
-               print("You did a basic attack!")
-               self.BasicAttack()
-            case 'U':
-                print("Someone chose an upgratable attack!")
-            case 'S':
-                print("Someone used your special attack")
-
-"""
-"""
-playerGrid = GridLogic()
-enemyGrid = GridLogic()
-battle =  BattleData()
-battle.you = Knight()
-battle.enemy = Skeleton()
-
-print(playerGrid.grid)
-print(enemyGrid.grid)
-
-#print(battle.getAll())
-"""
-
-"""
-while True:
-    chosen = input("Attack! Press any key to continue: ")
-    print("Player is performing.")
-
-    playerGrid.output()
-
-    #Enemy's turn
-    print("\n Now it's the enemy's turn!")
-    enemyGrid.output()
-
-    print('---------------------------------------------')
-"""
+    def show_available_moves(self):
+        """Highlight all available moves for the player"""
+        # This could be expanded to show which cells the player can choose from
+        # For now, it just clears selections to show all options are available
+        self.clear_selections()
