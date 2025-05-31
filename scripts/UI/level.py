@@ -1,6 +1,6 @@
 import pygame
-from scripts.Grid import Grid, GridLogic
-import random 
+import random
+from scripts.Grid import Grid, GridLogic  # Add this import
 
 class LevelSelectionScreen:
     SCREEN_WIDTH = 1280
@@ -10,6 +10,9 @@ class LevelSelectionScreen:
         (255, 100, 0),
         (200, 50, 0)
     ]
+    
+    # Add static variable to store selected grid data
+    selected_grid_data = None
     
     @staticmethod
     def init(font):
@@ -93,6 +96,8 @@ class LevelSelectionScreen:
             for door in LevelSelectionScreen.doors:
                 if door['rect'].collidepoint(mouse_pos):
                     LevelSelectionScreen.selected_level = door['level']
+                    # Store the selected grid data
+                    LevelSelectionScreen.selected_grid_data = door['grid_data']
                     return True
         return False
 
