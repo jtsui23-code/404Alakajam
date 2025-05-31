@@ -3,6 +3,13 @@ import pygame.font
 # import os # os is imported but not used in the provided snippet
 from scripts.Grid import Grid, GridLogic # Assuming this path is correct
 
+ENEMY_TYPES = {
+    "Slime": "Media/enemy/Slime.png",
+    "Ghost": "Media/enemy/Ghost.png",
+    "Zombie": "Media/enemy/Zombie.png",
+    "Skeleton": "Media/enemy/Skeleton.png",
+    "bat": "Media/enemy/Bat.png",
+}
 
 class BattleScreen:
     """Battle screen UI component with configurable callbacks and heart management.
@@ -14,6 +21,8 @@ class BattleScreen:
         self.font = pygame.font.SysFont('Arial', 24)
         self.width, self.height = screen.get_size()
         self.clock = pygame.time.Clock()
+        
+        self.enemy_type = None
         
         self.colors = {
             'background': (20, 20, 40),
@@ -65,9 +74,40 @@ class BattleScreen:
             'enemy_defeated': lambda: print("Enemy was defeated!")
         }
 
-    # (Keep _create_grids, _create_buttons, set_callback, and other heart/selection management methods as they are)
-    # ... previous methods ...
-    # Grid Creation ------------------------------------------------------------
+        if self.enemy_type:
+            self.update_enemy_grid()
+
+    def set_enemy(self, encounter_data):
+        """Set the enemy based on encounter data"""
+        print(f"Setting enemy from encounter data: {encounter_data}")
+        if encounter_data.get('type') == 'enemy':
+            self.enemy_type = encounter_data.get('name', 'Slime')
+            print(f"Enemy type set to: {self.enemy_type}")
+            # Update the enemy grid if it exists
+            if hasattr(self, 'enemy_grids') and self.enemy_grids:
+                self.update_enemy_grid()
+
+    def update_enemy_grid(self):
+        """Update the enemy grid with the current enemy type"""
+        if not self.enemy_type or not self.enemy_grids:
+            return
+            
+        try:
+            print(f"Loading enemy image: {ENEMY_TYPES[self.enemy_type]}")
+            enemy_img = pygame.image.load(ENEMY_TYPES[self.enemy_type]).convert_alpha()
+            # Scale the image to fit the grid cell
+            scaled_img = pygame.transform.scale(
+                enemy_img,
+                (self.enemy_grids[0].cell_width - 10, self.enemy_grids[0].cell_height - 10)
+            )
+            self.enemy_grids[0].fill_cell_with_image(0, 0, scaled_img, 
+                                                     lambda: self.enemy_grids[0].set_selected_cell(0,0))
+            print("Enemy image loaded successfully")
+        except Exception as e:
+            print(f"Error loading enemy image: {e}")
+            self.enemy_grids[0].fill_cell(0, 0, self.enemy_type, self.font, 
+                                          lambda: self.enemy_grids[0].set_selected_cell(0,0))
+
     def _create_grids(self, left):
         grids = []
         grid_size = min(self.width * 0.28, self.height * 0.2)
@@ -83,20 +123,18 @@ class BattleScreen:
             grid = Grid(start_x, y, grid_size, grid_size, rows, cols)
             
             if i == 0 and not left:  # Enemy side, first grid
-                try:
-                    skeletonImg = pygame.image.load('Media/enemy/Dragon.png').convert_alpha()
-                    grid.fill_cell_with_image(0, 0, skeletonImg, lambda: grid.set_selected_cell(0, 0))
-                except pygame.error as e:
-                    print(f"Could not load skeleton image: {e}")
-                    grid.fill_cell(0, 0, "SKEL", self.font, lambda: grid.set_selected_cell(0, 0))
+                # Initialize with a placeholder
+                grid.fill_cell(0, 0, "???", self.font, lambda: grid.set_selected_cell(0,0))
             elif i == 0 and left:  # Player side, first grid
-                grid.fill_cell(0, 0, "HERO", self.font, lambda: grid.set_selected_cell(0, 0))
+                grid.fill_cell(0, 0, "HERO", self.font, lambda: grid.set_selected_cell(0,0))
             else:
                 GridLogic.displayGrid(grid, GridLogic.generateGrid(), self.font)
             
             grids.append(grid)
-        return grids
 
+        return grids
+    
+    
     # Button Management --------------------------------------------------------
     def _create_buttons(self):
         buttons = []

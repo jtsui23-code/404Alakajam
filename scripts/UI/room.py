@@ -4,6 +4,7 @@ from scripts.UI.level import LevelSelectionScreen
 
 class Room:
     # Screen state
+    selected_encounter_data = None
     running = False
     initialized = False
     frame = 0
@@ -60,6 +61,13 @@ class Room:
             
         GridLogic.displayGrid(cls.room_grid, grid_data, cls.default_font)
         
+         # NEW: Automatically select the cell that was chosen in level selection
+        if LevelSelectionScreen.selected_cell:
+            row, col = LevelSelectionScreen.selected_cell
+            cls.room_grid.set_selected_cell(row, col)
+            cls.selected_cell = (row, col)
+
+
         # Create button rectangles
         button_width, button_height = 200, 50
         button_y = cls.room_grid.y + cls.room_grid.height + 30
@@ -201,6 +209,12 @@ class Room:
                         cls.selected_cell = cell
                         return True
                 
+                    # (since the cell was already selected in level selection)
+                    if not LevelSelectionScreen.selected_cell and cls.room_grid:
+                        cell = cls.room_grid.get_cell_at_pos(event.pos)
+                        if cell:
+                            cls.selected_cell = cell
+                            return True
         return False
     
     @classmethod
@@ -215,3 +229,4 @@ class Room:
         cls.back_button_rect = None
         # Reset the selected grid data
         LevelSelectionScreen.selected_grid_data = None
+        cls.selected_encounter_data = None

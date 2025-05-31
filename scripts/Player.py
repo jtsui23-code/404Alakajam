@@ -5,7 +5,7 @@ class Entity():
     def __init__(self):
         
         self.hearts = 8
-        self.playerClass = ''
+        self.name = ''
         self.specialMoveName = ''
         self.specialMove = None
         self.item = None
@@ -26,7 +26,7 @@ class Knight(Entity):
     def __init__(self):
 
         self.hearts = 8
-        self.playerClass = 'Knight'
+        self.name = 'Knight'
         # Deals 150 % more damage next turn but take 50% more damage next turn.
         self.specialMoveName = 'Dulist\'s Gambit'
         self.specialMove = None
@@ -38,7 +38,7 @@ class Wizard(Entity):
     def __init__(self):
 
         self.hearts = 6
-        self.playerClass = 'Wizard'
+        self.name = 'Wizard'
 
         # Deals 2 heart of damage and applies burning status to 3 enemy cells. If the enemy lands on burned 
         # cells gain burn DOT (1 heart/turn).
@@ -53,7 +53,7 @@ class Goblin(Entity):
     def __init__(self):
 
         self.hearts = 4
-        self.playerClass = 'Goblin'
+        self.name = 'Goblin'
 
         # Permanty reduces enemy dmg by 50% per hit. 
         self.specialMoveName = 'Rusty Shiv'
@@ -66,7 +66,7 @@ class Rat(Entity):
     def __init__(self):
 
         self.hearts = 4
-        self.playerClass = 'Rat'
+        self.name = 'Rat'
 
         # Life steals 1 heart and turns 1 enemy B cell to a X cell for 2 turns.
         self.specialMoveName = 'Vermin Fangs' 
@@ -80,7 +80,7 @@ class Thief(Entity):
     def __init__(self):
 
         self.hearts = 5
-        self.playerClass = 'Thief'
+        self.name = 'Thief'
 
         # Encore (forces enmey to use the last move for 2 turns)
         self.specialMoveName = 'Pressure Point' 
