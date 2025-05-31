@@ -1,4 +1,5 @@
 import pygame
+import random
 from scripts.Grid import Grid, GridLogic
 from scripts.UI.level import LevelSelectionScreen
 
@@ -9,6 +10,7 @@ class Room:
     initialized = False
     frame = 0
     selected_cell = None  # Track selected cell (row, col)
+    encounter_grid_data = None  # Store encounter data for the room
     
     # Screen dimensions
     WIDTH = 1280
@@ -21,15 +23,23 @@ class Room:
     BUTTON_HOVER = (100, 100, 120)
     BUTTON_TEXT = (255, 255, 255)
     SELECTED_TEXT = (200, 200, 0)
+    INFO_TEXT = (180, 180, 180)
     
     # Fonts
     default_font = None
     small_font = None
+    large_font = None
     
     # UI Elements
     room_grid = None
     play_button_rect = None
     back_button_rect = None
+    roll_button_rect = None
+    
+    # Animation state
+    rolling_animation = False
+    roll_timer = 0
+    roll_duration = 2.0  # 2 seconds of rolling animation
 
     @classmethod
     def initialize(cls, screen):
@@ -40,86 +50,202 @@ class Room:
         pygame.font.init()
         cls.default_font = pygame.font.SysFont('Arial', 24)
         cls.small_font = pygame.font.SysFont('Arial', 20)
+        cls.large_font = pygame.font.SysFont('Arial', 32)
         
         # Create centered grid
         grid_width = 600
         grid_height = 400
         cls.room_grid = Grid(
             (cls.WIDTH - grid_width) // 2,
-            (cls.HEIGHT - grid_height) // 2 - 50,  # Move up to make space for UI
+            (cls.HEIGHT - grid_height) // 2 - 50,
             grid_width,
             grid_height,
             3, 3
         )
         
-        # Use the selected grid data if available
-        if LevelSelectionScreen.selected_grid_data:
-            grid_data = LevelSelectionScreen.selected_grid_data
-        else:
-            # Fallback to generated grid if no selection exists
-            grid_data = GridLogic.generateGrid()
-            
-        GridLogic.displayGrid(cls.room_grid, grid_data, cls.default_font)
+        # Generate encounter data for this room
+        cls.encounter_grid_data = GridLogic.generateEncounterGrid(3, 3)
         
-         # NEW: Automatically select the cell that was chosen in level selection
+        # Display the encounter grid
+        GridLogic.displayGrid(cls.room_grid, cls.encounter_grid_data, cls.default_font)
+        
+        # If there was a selected cell from level selection, use it
         if LevelSelectionScreen.selected_cell:
             row, col = LevelSelectionScreen.selected_cell
             cls.room_grid.set_selected_cell(row, col)
             cls.selected_cell = (row, col)
 
-
         # Create button rectangles
-        button_width, button_height = 200, 50
+        button_width, button_height = 180, 50
         button_y = cls.room_grid.y + cls.room_grid.height + 30
         
+        # Three buttons: Roll, Play, Back
+        cls.roll_button_rect = pygame.Rect(
+            cls.WIDTH//2 - button_width - 100,
+            button_y,
+            button_width,
+            button_height
+        )
+        
         cls.play_button_rect = pygame.Rect(
-            cls.WIDTH//2 - button_width - 20,
+            cls.WIDTH//2 - button_width//2,
             button_y,
             button_width,
             button_height
         )
         
         cls.back_button_rect = pygame.Rect(
-            cls.WIDTH//2 + 20,
+            cls.WIDTH//2 + 100,
             button_y,
             button_width,
             button_height
         )
         
         cls.initialized = True
-    
+        print("Room initialized with encounter grid")
+
     @classmethod
-    def draw_selected_cell_text(cls, screen):
-        """Draw the 'Selected Cell' text below buttons"""
+    def select_random_encounter(cls):
+        """Randomly select an encounter from the current room grid"""
+        if not cls.encounter_grid_data:
+            print("Warning: No encounter grid data available")
+            return None
+        
+        # Start rolling animation
+        cls.rolling_animation = True
+        cls.roll_timer = 0
+        
+        # Randomly select a cell
+        row = random.randint(0, 2)
+        col = random.randint(0, 2)
+        
+        # Get the encounter data
+        selected_encounter = cls.encounter_grid_data[row][col]
+        cls.selected_encounter_data = selected_encounter
+        cls.selected_cell = (row, col)
+        
+        # Update grid selection
+        cls.room_grid.set_selected_cell(row, col)
+        
+        print(f"Random encounter selected at ({row}, {col}): {selected_encounter}")
+        return selected_encounter
+
+    @classmethod
+    def get_encounter_description(cls, encounter_data):
+        """Get a description of the encounter"""
+        if not encounter_data:
+            return "No encounter selected"
+        
+        encounter_type = encounter_data.get('type', 'unknown')
+        
+        if encounter_type == 'enemy':
+            enemy_name = encounter_data.get('name', 'Unknown Enemy')
+            return f"Enemy: {enemy_name}"
+        elif encounter_type == 'coin':
+            coin_value = encounter_data.get('value', 0)
+            return f"Treasure: {coin_value} coins"
+        elif encounter_type == 'chest':
+            return "Treasure: Mysterious chest"
+        else:
+            return f"Unknown encounter: {encounter_type}"
+
+    @classmethod
+    def update_animation(cls, dt):
+        """Update rolling animation"""
+        if cls.rolling_animation:
+            cls.roll_timer += dt
+            
+            # During animation, randomly highlight different cells
+            if cls.roll_timer < cls.roll_duration:
+                if int(cls.roll_timer * 10) % 2 == 0:  # Change selection every 0.1 seconds
+                    temp_row = random.randint(0, 2)
+                    temp_col = random.randint(0, 2)
+                    cls.room_grid.set_selected_cell(temp_row, temp_col)
+            else:
+                # Animation finished, show final selection
+                cls.rolling_animation = False
+                if cls.selected_cell:
+                    row, col = cls.selected_cell
+                    cls.room_grid.set_selected_cell(row, col)
+
+    @classmethod
+    def draw_title(cls, screen):
+        """Draw the room title"""
+        title_text = "ROOM EXPLORATION"
+        title_surface = cls.large_font.render(title_text, True, cls.BUTTON_TEXT)
+        title_y = cls.room_grid.y - 80
+        screen.blit(title_surface, (
+            cls.WIDTH//2 - title_surface.get_width()//2,
+            title_y
+        ))
+
+    @classmethod
+    def draw_encounter_info(cls, screen):
+        """Draw information about the selected encounter"""
+        info_y = cls.back_button_rect.bottom + 30
+        
+        if cls.rolling_animation:
+            info_text = "Rolling for encounter..."
+        elif cls.selected_encounter_data:
+            info_text = cls.get_encounter_description(cls.selected_encounter_data)
+        else:
+            info_text = "Click 'Roll' to select a random encounter or click a cell manually"
+        
+        info_surface = cls.small_font.render(info_text, True, cls.INFO_TEXT)
+        screen.blit(info_surface, (
+            cls.WIDTH//2 - info_surface.get_width()//2,
+            info_y
+        ))
+        
+        # Show selected cell coordinates
         if cls.selected_cell:
             row, col = cls.selected_cell
-            text = f"Selected Cell: {row},{col}"
+            coord_text = f"Selected Cell: ({row}, {col})"
         else:
-            text = "Selected Cell: None"
+            coord_text = "No cell selected"
             
-        text_surface = cls.small_font.render(text, True, cls.SELECTED_TEXT)
-        text_y = cls.back_button_rect.bottom + 20
-        screen.blit(text_surface, (
-            cls.WIDTH//2 - text_surface.get_width()//2,
-            text_y
+        coord_surface = cls.small_font.render(coord_text, True, cls.SELECTED_TEXT)
+        screen.blit(coord_surface, (
+            cls.WIDTH//2 - coord_surface.get_width()//2,
+            info_y + 25
         ))
 
     @classmethod
     def draw_buttons(cls, screen):
-        """Draw the Play and Go Back buttons"""
+        """Draw all action buttons"""
+        mouse_pos = pygame.mouse.get_pos()
+        
+        # Draw Roll button
+        roll_color = cls.BUTTON_HOVER if cls.roll_button_rect.collidepoint(mouse_pos) else cls.BUTTON_COLOR
+        if cls.rolling_animation:
+            roll_color = (50, 50, 50)  # Disabled color during animation
+        
+        pygame.draw.rect(screen, roll_color, cls.roll_button_rect, border_radius=5)
+        pygame.draw.rect(screen, cls.BUTTON_TEXT, cls.roll_button_rect, 2, border_radius=5)
+        
+        roll_text = cls.default_font.render("Roll", True, cls.BUTTON_TEXT)
+        screen.blit(roll_text, (
+            cls.roll_button_rect.centerx - roll_text.get_width()//2,
+            cls.roll_button_rect.centery - roll_text.get_height()//2
+        ))
+        
         # Draw Play button
-        play_color = cls.BUTTON_HOVER if cls.play_button_rect.collidepoint(pygame.mouse.get_pos()) else cls.BUTTON_COLOR
+        play_color = cls.BUTTON_HOVER if cls.play_button_rect.collidepoint(mouse_pos) else cls.BUTTON_COLOR
+        play_enabled = cls.selected_encounter_data is not None and not cls.rolling_animation
+        if not play_enabled:
+            play_color = (50, 50, 50)  # Disabled color
+        
         pygame.draw.rect(screen, play_color, cls.play_button_rect, border_radius=5)
         pygame.draw.rect(screen, cls.BUTTON_TEXT, cls.play_button_rect, 2, border_radius=5)
         
-        play_text = cls.default_font.render("Play", True, cls.BUTTON_TEXT)
+        play_text = cls.default_font.render("Enter Battle", True, cls.BUTTON_TEXT)
         screen.blit(play_text, (
             cls.play_button_rect.centerx - play_text.get_width()//2,
             cls.play_button_rect.centery - play_text.get_height()//2
         ))
         
         # Draw Back button
-        back_color = cls.BUTTON_HOVER if cls.back_button_rect.collidepoint(pygame.mouse.get_pos()) else cls.BUTTON_COLOR
+        back_color = cls.BUTTON_HOVER if cls.back_button_rect.collidepoint(mouse_pos) else cls.BUTTON_COLOR
         pygame.draw.rect(screen, back_color, cls.back_button_rect, border_radius=5)
         pygame.draw.rect(screen, cls.BUTTON_TEXT, cls.back_button_rect, 2, border_radius=5)
         
@@ -128,23 +254,59 @@ class Room:
             cls.back_button_rect.centerx - back_text.get_width()//2,
             cls.back_button_rect.centery - back_text.get_height()//2
         ))
-    
+
     @classmethod
     def handle_button_click(cls, pos):
         """Handle button clicks"""
+        if cls.rolling_animation:
+            return False  # Ignore clicks during animation
+        
+        if cls.roll_button_rect.collidepoint(pos):
+            print("Roll button clicked - selecting random encounter")
+            cls.select_random_encounter()
+            return True
+            
         if cls.play_button_rect.collidepoint(pos):
-            print("Play button clicked")
-            if cls.selected_cell:
-                print(f"Playing with selected cell: {cls.selected_cell}")
+            if cls.selected_encounter_data:
+                print(f"Enter Battle clicked with encounter: {cls.selected_encounter_data}")
+                return "battle"
+            else:
+                print("No encounter selected - cannot enter battle")
             return True
             
         if cls.back_button_rect.collidepoint(pos):
             print("Go Back button clicked")
             cls.running = False
-            return True
+            return "back"
             
         return False
-    
+
+    @classmethod
+    def handle_grid_click(cls, pos):
+        """Handle clicks on grid cells"""
+        if cls.rolling_animation:
+            return False
+        
+        # Check which cell was clicked
+        for row in range(3):
+            for col in range(3):
+                cell_rect = pygame.Rect(
+                    cls.room_grid.x + col * cls.room_grid.cell_width,
+                    cls.room_grid.y + row * cls.room_grid.cell_height,
+                    cls.room_grid.cell_width,
+                    cls.room_grid.cell_height
+                )
+                
+                if cell_rect.collidepoint(pos):
+                    # Manual selection
+                    cls.selected_cell = (row, col)
+                    cls.selected_encounter_data = cls.encounter_grid_data[row][col]
+                    cls.room_grid.set_selected_cell(row, col)
+                    print(f"Manually selected encounter at ({row}, {col}): {cls.selected_encounter_data}")
+                    return True
+        
+        return False
+
     @classmethod
     def draw_background(cls, screen):
         """Draw the screen background"""
@@ -163,24 +325,29 @@ class Room:
                 ),
                 border_radius=5
             )
-    
+
     @classmethod
     def draw(cls, screen):
         """Draw the entire room screen"""
         if not cls.initialized:
             cls.initialize(screen)
-            
+        
+        # Update animation
+        dt = pygame.time.Clock().tick(60) / 1000.0
+        cls.update_animation(dt)
+        
         cls.frame += 1
         
         # Draw all elements
         cls.draw_background(screen)
+        cls.draw_title(screen)
         
         if cls.room_grid:
             cls.room_grid.draw(screen, cls.default_font)
             
         cls.draw_buttons(screen)
-        cls.draw_selected_cell_text(screen)
-    
+        cls.draw_encounter_info(screen)
+
     @classmethod
     def update(cls, event):
         """Handle screen events"""
@@ -194,29 +361,33 @@ class Room:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 cls.running = False
+                return "back"
+            elif event.key == pygame.K_SPACE and not cls.rolling_animation:
+                # Space bar to roll
+                cls.select_random_encounter()
                 return True
+            elif event.key == pygame.K_RETURN and cls.selected_encounter_data and not cls.rolling_animation:
+                # Enter to battle
+                return "battle"
                 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left click
                 # Check buttons first
-                if cls.handle_button_click(event.pos):
-                    return True
+                button_result = cls.handle_button_click(event.pos)
+                if button_result:
+                    return button_result
                 
                 # Then check grid cells
-                if cls.room_grid:
-                    cell = cls.room_grid.get_cell_at_pos(event.pos)
-                    if cell:
-                        cls.selected_cell = cell
-                        return True
-                
-                    # (since the cell was already selected in level selection)
-                    if not LevelSelectionScreen.selected_cell and cls.room_grid:
-                        cell = cls.room_grid.get_cell_at_pos(event.pos)
-                        if cell:
-                            cls.selected_cell = cell
-                            return True
+                if cls.handle_grid_click(event.pos):
+                    return True
+                    
         return False
-    
+
+    @classmethod
+    def get_selected_encounter(cls):
+        """Get the currently selected encounter data"""
+        return cls.selected_encounter_data
+
     @classmethod
     def clear(cls):
         """Reset screen state"""
@@ -224,9 +395,19 @@ class Room:
         cls.initialized = False
         cls.frame = 0
         cls.selected_cell = None
+        cls.selected_encounter_data = None
+        cls.encounter_grid_data = None
         cls.room_grid = None
         cls.play_button_rect = None
         cls.back_button_rect = None
-        # Reset the selected grid data
-        LevelSelectionScreen.selected_grid_data = None
-        cls.selected_encounter_data = None
+        cls.roll_button_rect = None
+        cls.rolling_animation = False
+        cls.roll_timer = 0
+        
+        # Clear level selection data if needed
+        if hasattr(LevelSelectionScreen, 'selected_grid_data'):
+            LevelSelectionScreen.selected_grid_data = None
+        if hasattr(LevelSelectionScreen, 'selected_cell'):
+            LevelSelectionScreen.selected_cell = None
+        
+        print("Room state cleared")
