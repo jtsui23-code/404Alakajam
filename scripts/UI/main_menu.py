@@ -135,8 +135,8 @@ class MainMenu:
         cls.fog.draw(pygame, screen)
         
         # Draw title with shadow and slight movement
-        title_text = cls.title_font.render("DUNGEON DEPTHS", True, cls.BLOOD_RED)
-        shadow_text = cls.title_font.render("DUNGEON DEPTHS", True, cls.BLACK)
+        title_text = cls.title_font.render("404: Lost in the Labyrinth", True, cls.BLOOD_RED)
+        shadow_text = cls.title_font.render("404: Lost in the Labyrinth", True, cls.BLACK)
         
         # Draw shadow
         shadow_rect = shadow_text.get_rect(center=(cls.WIDTH//2 + 4 + shake_offset[0], 

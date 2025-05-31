@@ -97,11 +97,11 @@ class Game:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if self.stateManager.currentState == 'roomSelect':
                         self.handler.resetBattleScreen()
-                        self.switchUI('roomSelect', 'battle')
+                        self.switchUI('roomSelect', 'roomRolling')
 
-                    # if self.stateManager.currentState == 'roomRolling':
-                    #     self.handler.resetBattleScreen()
-                    #     self.switchUI('roomRolling', 'battle')
+                    elif self.stateManager.currentState == 'roomRolling':
+                        self.handler.resetBattleScreen()
+                        self.switchUI('roomRolling', 'battle')
                  
                 
 
@@ -149,6 +149,10 @@ class Game:
             elif self.stateManager.currentState == 'battle':
 
                 self.handler.render('battle')
+            
+            elif self.stateManager.currentState == 'roomRolling':
+
+                self.handler.render('roomRolling')
 
 
             

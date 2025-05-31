@@ -1,5 +1,6 @@
 import pygame
 from scripts.Grid import Grid, GridLogic
+from scripts.UI.level import LevelSelectionScreen
 
 class Room:
     # Screen state
@@ -50,8 +51,13 @@ class Room:
             3, 3
         )
         
-        # Initialize grid data
-        grid_data = GridLogic.generateGrid()
+        # Use the selected grid data if available
+        if LevelSelectionScreen.selected_grid_data:
+            grid_data = LevelSelectionScreen.selected_grid_data
+        else:
+            # Fallback to generated grid if no selection exists
+            grid_data = GridLogic.generateGrid()
+            
         GridLogic.displayGrid(cls.room_grid, grid_data, cls.default_font)
         
         # Create button rectangles
@@ -207,3 +213,5 @@ class Room:
         cls.room_grid = None
         cls.play_button_rect = None
         cls.back_button_rect = None
+        # Reset the selected grid data
+        LevelSelectionScreen.selected_grid_data = None
