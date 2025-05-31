@@ -131,15 +131,24 @@ class Grid:
 
 
 class GridLogic:
+
     @staticmethod
     def generateGrid():
-        arr = [['B', 'R', 'S'],[ 'R', 'X', 'R'], ['B' , 'R', 'U']]
-        arr[0][1] = 'B' if random.randint(1,100) > 66 else 'X'
-        arr[1][0] = 'B' if random.randint(1,100) > 66 else 'X'
-        arr[1][2] = 'B' if random.randint(1,100) > 66 else 'X'
-        arr[2][1] = 'B' if random.randint(1,100) > 66 else 'X'
+        # Initialize with default values
+        grid = [['B', 'R', 'S'], ['R', 'X', 'R'], ['B', 'R', 'U']]
 
-        return arr
+        # Flatten the grid to 1D to easily access by index
+        flat_grid = [cell for row in grid for cell in row]
+
+        # Indices to randomize: 1, 3, 5, 7
+        indices_to_randomize = [1, 3, 5, 7]
+        for i in indices_to_randomize:
+            flat_grid[i] = 'X' if random.random() < 0.66 else 'B'
+
+        # Convert back to 3x3 grid
+        randomized_grid = [flat_grid[i:i + 3] for i in range(0, 9, 3)]
+        return randomized_grid
+
    
     @staticmethod
     def chooseCell(grid):
