@@ -55,7 +55,7 @@ class LevelSelectionScreen:
             )
             
             # Generate and store grid data
-            grid_data = GridLogic.generateGrid()
+            grid_data = GridLogic.generateEncounterGrid()
             GridLogic.displayGrid(grid, grid_data, LevelSelectionScreen.font)
             
             LevelSelectionScreen.doors.append({
