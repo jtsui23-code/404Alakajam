@@ -4,7 +4,7 @@ import pygame
 from scripts.UI.UIHandler import UIHandler
 from scripts.State import StateManager
 from scripts.UI.difficulty import DifficultySelector
-
+from scripts.UI.room import Room
 
 
 
@@ -100,6 +100,10 @@ class Game:
                         self.switchUI('roomSelect', 'roomRolling')
 
                     elif self.stateManager.currentState == 'roomRolling':
+                        
+                        if Room.selected_encounter_data:
+                            self.handler.setBattleEncounter(Room.selected_encounter_data)
+                        
                         self.handler.resetBattleScreen()
                         self.switchUI('roomRolling', 'battle')
                  

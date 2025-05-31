@@ -17,6 +17,7 @@ from scripts.Battle import BattleData
 class UIHandler:
     def __init__(self, screen):
         self.screen = screen
+        self.battle_encounter_data = None
         
         self.battleData = BattleData(self.screen)        
        # self.Shop = Shop()
@@ -88,5 +89,18 @@ class UIHandler:
             return 'lost'
         else:
             return 'battling'
+        
+
+    def setBattleEncounter(self, encounter_data):
+        self.battle_encounter_data = encounter_data
+        # Pass the encounter data directly to the battle screen
+        if self.battleData and self.battleData.screen:
+            self.battleData.screen.set_enemy(encounter_data)
+    
+    def resetBattleScreen(self):
+        self.battleData = BattleData(self.screen)
+        # Pass encounter data to the new battle screen
+        if self.battle_encounter_data:
+            self.battleData.screen.set_enemy(self.battle_encounter_data)
 
     
