@@ -99,13 +99,13 @@ class Game:
                         self.handler.resetBattleScreen()
                         self.switchUI('roomSelect', 'roomRolling')
 
-                    elif self.stateManager.currentState == 'roomRolling':
+                    # elif self.stateManager.currentState == 'roomRolling':
                         
-                        if Room.selected_encounter_data:
-                            self.handler.setBattleEncounter(Room.selected_encounter_data)
+                    #     if Room.selected_encounter_data:
+                    #         self.handler.setBattleEncounter(Room.selected_encounter_data)
                         
-                        self.handler.resetBattleScreen()
-                        self.switchUI('roomRolling', 'battle')
+                    #     self.handler.resetBattleScreen()
+                    #     self.switchUI('roomRolling', 'battle')
                  
                 
 
@@ -157,6 +157,17 @@ class Game:
             elif self.stateManager.currentState == 'roomRolling':
 
                 self.handler.render('roomRolling')
+
+                room_result = Room.update(event)
+                if room_result == "battle":
+                    # Set the encounter for battle
+                    encounter_data = Room.get_selected_encounter()
+                    if encounter_data:
+                        self.handler.setBattleEncounter(encounter_data)
+                    self.handler.resetBattleScreen()
+                    self.switchUI('roomRolling', 'battle')
+                elif room_result == "back":
+                    self.switchUI('roomRolling', 'roomSelect')
 
 
             
